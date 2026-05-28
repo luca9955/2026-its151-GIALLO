@@ -1,10 +1,25 @@
 Mi aiuti a creare il lato ADMIN del sito che sto creando basandoti sul tema della ficsit, satisfactory?
-La mia idea era quella di creare un sito internet di un ristorante tema satisfactory ficsit con menu, prenotazione, login, recensioni.
-Mi servirebbe che mi crei più html,css,javascript che poi convergono in un unico iframe in un altro html in modo da non dover ricaricare la pagina ogni volta.
-(La mia idea di file per l'admin sarebbero:
 
-* principale.html,principale.css,principale.js
-* menu.html, menu.css,menu.js
-* recensioni.html,recensioni.css,recensioni.js
-* prenotazioni.html,prenotazioni.css,prenotazioni.js
-* ordinazioni.html,ordinazioni.css,ordinazioni.js
+La mia idea era quella di creare un sito internet di un ristorante tema satisfactory ficsit con menu, prenotazione, login, recensioni.
+
+Mi servirebbe che mi crei più html,css,javascript che poi convergono in un unico iframe in un altro html in modo da non dover ricaricare la pagina ogni volta.
+
+La mia idea di file per l'admin sarebbero:
+
+
+
+* principale.html,principale.css,principale.js (conterrà tutte le altre pagine html)
+
+* menu.html, menu.css,menu.js (avrà la possibilità di modificare: prezzo, attivo/disattivo, descrizione.    Si potrà poi aggiungere o eliminare piatti al menù.)
+
+* recensioni.html,recensioni.css,recensioni.js (Si avrà la possibilità di visualizzare e, in caso, eliminare i commenti)
+
+* prenotazioni.html,prenotazioni.css,prenotazioni.js(L'ADMIN potrà vedere: i tavoli prenotati, il numero di persone per ogni tavolo,  chi ha prenotato il tavolo, approvare o non approvare la prenotazione)
+
+* ordinazioni.html,ordinazioni.css,ordinazioni.js (L'ADMIN vedrà: da che tavolo proviene la prenotazione, cosa è stato ordinato, se l'ordinazione è: accettata, in preparazione, consegnato. e la possibilità di modificare tutti i parametri precedentemente elencati)
+
+
+
+
+
+Restituiscimi direttamente i file corretti da scaricare
