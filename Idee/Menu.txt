@@ -1,0 +1,14 @@
+LATO CLIENT:
+
+La pagina del menu conterrà "5 colonne":
+- 1: nome del piatto (possibilmente con un png che lo rappresenti)
+- 2: ingredienti del piatto(Solo la descrizione di cosa è composto il piatto)
+- 3: descrizione del piatto (piccola frase che descriverà il piatto)
+- 4: costo
+- 5: decisione se aggiungere o no il piatto alla prenotazione ed il quantitativo
+
+
+LATO ADMIN:
+
+Possibilità di aggiungere piatti, Possibilità di rimuovere piatti, Possibilità di modificare le caratteristiche dei piatti,
+Possibilità di disabilitare/abilitare i piatti, Lettura delle prenotazioni e da quale tavolo arriva
