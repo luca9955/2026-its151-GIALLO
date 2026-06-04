@@ -1,0 +1,391 @@
+Voglio che tu agisca come un **Senior Full Stack Developer**, **Senior UI/UX Designer** e **Frontend Architect** specializzato in:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6+
+* Dashboard amministrative professionali
+* UI futuristiche industriali
+* Design System scalabili
+
+## RIFERIMENTO VISIVO OBBLIGATORIO
+
+**Analizza attentamente l'immagine che ti sto allegando e utilizzala come riferimento principale per il design dell'intero pannello amministrativo.**
+
+Devi estrarre e replicare:
+
+* Palette colori
+* Atmosfera visiva
+* Stile industriale
+* Layout
+* Effetti luminosi
+* Contrasti
+* Spaziature
+* Tipografia
+* Componenti UI
+* Pattern grafici
+* Effetti hover
+* Ombre
+* Glow
+* Bordi
+* Iconografia
+
+L'interfaccia finale deve sembrare appartenere allo stesso universo visivo mostrato nell'immagine.
+
+---
+
+# Tema
+
+Realizzare il pannello ADMIN completo di un ristorante a tema:
+
+* Satisfactory
+* FICSIT
+
+## Palette principale
+
+* Arancione FICSIT: #FF7A00
+* Nero: #111111
+* Grigio scuro: #1C1C1C
+* Grigio medio: #2F2F2F
+* Bianco: #FFFFFF
+
+---
+
+# Stile grafico richiesto
+
+L'interfaccia deve essere:
+
+* Futuristica
+* Industriale
+* Tecnologica
+* Premium
+* Professionale
+* Moderna
+* Responsive
+* Immersiva
+
+Implementare:
+
+* Glow arancioni dinamici
+* Effetti neon controllati
+* Glassmorphism leggero
+* Pannelli metallici
+* Effetti depth
+* Hover avanzati
+* Microanimazioni
+* Transizioni fluide
+* Indicatori di stato luminosi
+* Effetti industrial HUD
+* Bordi tecnologici
+* Pattern geometrici ispirati a FICSIT
+
+---
+
+# Qualità UI/UX
+
+Ogni schermata deve rispettare:
+
+* UX professionale
+* Accessibilità
+* Responsive Design
+* Mobile First
+* Tablet Friendly
+* Desktop Optimized
+
+Creare:
+
+* Empty states
+* Loading states
+* Hover states
+* Active states
+* Focus states
+* Toast notifications
+* Modali professionali
+* Badge di stato
+* Tooltip
+* Conferme eliminazione
+
+---
+
+# Architettura del progetto
+
+Genera tutti i file separatamente.
+
+Struttura:
+
+principale.html
+principale.css
+principale.js
+
+menu.html
+menu.css
+menu.js
+
+prenotazioni.html
+prenotazioni.css
+prenotazioni.js
+
+ordinazioni.html
+ordinazioni.css
+ordinazioni.js
+
+recensioni.html
+recensioni.css
+recensioni.js
+
+---
+
+# Dashboard Principale
+
+## principale.html
+
+Funzioni:
+
+* Sidebar sinistra
+* Header superiore
+* Dashboard centrale
+* Iframe per caricamento pagine interne
+* Nessun refresh della pagina
+
+Menu:
+
+* Dashboard
+* Gestione Menù
+* Prenotazioni
+* Ordinazioni
+* Recensioni
+* Logout
+
+L'iframe deve occupare il 100% dello spazio disponibile.
+
+---
+
+# Dashboard iniziale
+
+Visualizzare:
+
+* Prenotazioni odierne
+* Ordini attivi
+* Numero recensioni
+* Incasso giornaliero simulato
+
+Mostrare tramite:
+
+* Stat cards animate
+* SVG charts puri
+* Grafici professionali
+* Nessuna libreria esterna
+
+Aggiungere:
+
+* Contatori animati
+* Barre progresso
+* Indicatori KPI
+* Attività recenti
+
+---
+
+# Gestione Menù
+
+## menu.html
+
+Tabella amministrativa avanzata.
+
+Campi:
+
+* Nome piatto
+* Descrizione
+* Prezzo
+* Categoria
+* Stato
+
+Funzioni:
+
+* CRUD completo
+* Ricerca live
+* Filtri
+* Ordinamento colonne
+* Modale inserimento
+* Modale modifica
+* Eliminazione con conferma
+
+Categorie esempio:
+
+* Antipasti
+* Primi
+* Secondi
+* Dolci
+* Bevande
+
+---
+
+# Gestione Prenotazioni
+
+Campi:
+
+* ID
+* Nome cliente
+* Telefono
+* Email
+* Tavolo
+* Numero persone
+* Data
+* Ora
+* Stato
+
+Stati:
+
+* In attesa
+* Approvata
+* Rifiutata
+
+Funzioni:
+
+* Ricerca
+* Filtri
+* Modifica
+* Approvazione
+* Rifiuto
+* Aggiornamento stato realtime
+
+---
+
+# Gestione Ordinazioni
+
+Campi:
+
+* ID ordine
+* Tavolo
+* Cliente
+* Piatti ordinati
+* Totale
+* Data e ora
+
+Stati:
+
+* Ricevuto
+* Accettato
+* In preparazione
+* Pronto
+* Consegnato
+
+Funzioni:
+
+* Cambio stato tramite select
+* Ricerca
+* Filtri
+* Dettaglio ordine
+* Badge colorati
+
+---
+
+# Gestione Recensioni
+
+Visualizzazione:
+
+* Cards professionali
+
+Campi:
+
+* Nome utente
+* Data
+* Stelle
+* Commento
+
+Funzioni:
+
+* Ricerca live
+* Filtri valutazione
+* Eliminazione
+* Layout responsive
+
+---
+
+# Requisiti JavaScript
+
+Utilizzare:
+
+* ES6+
+* Modularità
+* LocalStorage
+* Event Delegation
+* Componentizzazione logica
+* Codice commentato
+
+Implementare:
+
+* CRUD completo
+* Persistenza dati
+* Seed automatico dati demo
+* Validazioni form
+* Aggiornamento dinamico UI
+
+---
+
+# Requisiti CSS
+
+Creare un vero Design System:
+
+* Variabili CSS
+* Utility classes
+* Componenti riutilizzabili
+* Responsive breakpoints
+* Animazioni custom
+
+Implementare:
+
+* Sidebar animata
+* Cards glow
+* Tabelle premium
+* Modali moderne
+* Badge stato
+* Inputs tecnologici
+* Scrollbar personalizzata
+* Effetti hover avanzati
+
+---
+
+# Requisiti Tecnici
+
+NON utilizzare:
+
+* Bootstrap
+* Tailwind
+* React
+* Vue
+* Angular
+* jQuery
+* Librerie esterne
+
+Utilizzare esclusivamente:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla
+
+---
+
+# OUTPUT
+
+Genera il codice COMPLETO e FUNZIONANTE.
+
+Non omettere nessuna parte del codice.
+
+Mostra ogni file separatamente nel formato:
+
+=== principale.html ===
+
+[codice completo]
+
+=== principale.css ===
+
+[codice completo]
+
+=== principale.js ===
+
+[codice completo]
+
+...
+
+Genera tutti i file richiesti fino al completamento dell'intero progetto.
+
+La qualità finale deve essere paragonabile a una dashboard amministrativa SaaS professionale moderna e coerente con l'immagine allegata.
