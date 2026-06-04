@@ -29,23 +29,14 @@ Utilizzare LocalStorage come database simulato.
 Implementare funzioni centralizzate:
 
 * getMenu()
-
 * saveMenu()
-
 * getReservations()
-
 * saveReservations()
-
 * getOrders()
-
 * saveOrders()
-
 * getReviews()
-
 * saveReviews()
-
 * getDashboardStats()
-
 * initializeDatabase()
 
 Tutte le pagine CLIENT e ADMIN devono utilizzare ESCLUSIVAMENTE queste funzioni.
@@ -68,36 +59,183 @@ L'area ADMIN deve leggere gli stessi dati.
 
 Ogni modifica effettuata dall'admin deve aggiornare immediatamente il database simulato.
 
-Utilizzare:
+Utilizzare obbligatoriamente:
 
 window.addEventListener("storage")
 
 per sincronizzare automaticamente i dati tra più tab aperte.
 
+Implementare inoltre un sistema di refresh automatico delle viste senza necessità di ricaricare la pagina.
+
+---
+
+# DESIGN E IDENTITÀ VISIVA
+
+L'intero progetto deve essere ispirato all'universo di SATISFACTORY e FICSIT.
+
+Requisiti grafici:
+
+* Palette colori FICSIT ufficiale
+
+  * Arancione industriale (#FF6A00)
+  * Nero carbone (#111111)
+  * Grigio acciaio (#222222)
+  * Grigio chiaro (#CCCCCC)
+
+* Aspetto industriale futuristico
+
+* Interfacce stile terminale FICSIT
+
+* Bordi illuminati
+
+* Effetti glow arancioni
+
+* Pannelli metallici
+
+* Hover avanzati
+
+* Transizioni fluide
+
+* Effetti particellari CSS
+
+* SVG decorativi personalizzati
+
+---
+
+# FONT SATISFACTORY
+
+TUTTE LE SCRITTE DEL SITO, INCLUSI:
+
+* Titoli
+* Menù
+* Bottoni
+* Tabelle
+* Numeri
+* Dashboard
+* Contatori
+* Stati
+
+devono utilizzare un font identico o estremamente simile a quello utilizzato in SATISFACTORY.
+
+Implementare:
+
+* Font custom tramite @font-face
+* Fallback professionali
+* Uniformità grafica totale
+
+Tutti i numeri devono utilizzare lo stesso font tecnico-industriale del gioco.
+
+---
+
+# IMMAGINI E CONTENUTI VISIVI
+
+L'IA deve aggiungere automaticamente immagini e contenuti grafici coerenti con l'universo SATISFACTORY.
+
+Inserire:
+
+* Background industriali futuristici
+* Fabbriche FICSIT
+* Nastri trasportatori
+* Macchinari industriali
+* Hub FICSIT
+* Strutture modulari
+* Paesaggi alieni tipici di SATISFACTORY
+* Elementi tecnologici e sci-fi
+
+Le immagini devono essere:
+
+* Responsive
+* Ottimizzate
+* Lazy loaded
+* Con overlay scuri
+* Integrate armoniosamente nel design
+
+Prevedere una cartella:
+
+/assets/images
+
+e utilizzare immagini placeholder descrivendo esattamente quale immagine SATISFACTORY-style dovrà essere inserita.
+
 ---
 
 ## AREA CLIENTE
 
-Generare le seguenti pagine:
+Generare:
 
-home.html
-
-menu.html
-
-prenotazione.html
-
-ordinazione.html
-
-recensioni.html
-
-contatti.html
+* home.html
+* menu.html
+* prenotazione.html
+* ordinazione.html
+* recensioni.html
+* contatti.html
 
 Ogni pagina deve avere:
 
 * design FICSIT
 * responsive
 * animazioni
-* accessibilità
+* accessibilità WCAG
+* SEO base
+* meta tag completi
+
+---
+
+# PRENOTAZIONE TAVOLI INTERATTIVA
+
+La pagina prenotazione.html deve includere una mappa grafica interattiva del ristorante.
+
+NON utilizzare una semplice select.
+
+Realizzare una vera planimetria.
+
+Struttura obbligatoria:
+
+4 righe x 4 colonne
+
+Totale:
+
+16 tavoli
+
+Visualizzazione:
+
+[T1] [T2] [T3] [T4]
+
+[T5] [T6] [T7] [T8]
+
+[T9] [T10] [T11] [T12]
+
+[T13] [T14] [T15] [T16]
+
+Ogni tavolo deve essere rappresentato da una sagoma grafica SVG o HTML/CSS.
+
+Stati tavolo:
+
+* Libero
+* Occupato
+* Prenotato
+* Selezionato
+
+Colori:
+
+* Verde = libero
+* Rosso = occupato
+* Arancione = prenotato
+* Blu = selezionato
+
+Funzionalità:
+
+* Click per selezione tavolo
+* Hover animato
+* Effetto glow
+* Tooltip informazioni
+* Accessibilità tastiera
+* Aggiornamento dinamico
+
+Quando il cliente prenota:
+
+* il tavolo scelto viene associato alla prenotazione
+* il tavolo viene aggiornato nello storage condiviso
+* l'admin visualizza immediatamente il tavolo assegnato
 
 ---
 
@@ -112,6 +250,7 @@ Form prenotazione con:
 * Numero persone
 * Data
 * Ora
+* Tavolo selezionato dalla mappa
 
 Alla conferma:
 
@@ -153,17 +292,21 @@ Form recensione:
 
 Salvare nello storage condiviso.
 
+Implementare:
+
+* rating a stelle animato
+* preview recensione
+* validazione form
+
 ---
 
 ## AREA ADMIN
 
 Generare:
 
-principale.html
-
-principale.css
-
-principale.js
+* principale.html
+* principale.css
+* principale.js
 
 Dashboard con iframe.
 
@@ -175,6 +318,8 @@ Menu laterale:
 * Ordinazioni
 * Recensioni
 * Logout
+
+Design stile terminale FICSIT.
 
 ---
 
@@ -193,6 +338,13 @@ Cambio stato:
 * In attesa
 * Approvata
 * Rifiutata
+
+Visualizzare inoltre:
+
+* Tavolo assegnato
+* Data
+* Ora
+* Cliente
 
 Le modifiche devono aggiornare immediatamente il database condiviso.
 
@@ -230,6 +382,15 @@ Funzioni:
 
 CRUD completo.
 
+Campi:
+
+* Nome piatto
+* Categoria
+* Descrizione
+* Prezzo
+* Immagine
+* Disponibilità
+
 Le modifiche al menù devono essere immediatamente visibili nell'area cliente.
 
 ---
@@ -243,7 +404,12 @@ Statistiche calcolate leggendo i dati reali presenti nello storage condiviso:
 * Numero recensioni
 * Incasso giornaliero
 
-Utilizzare SVG puri.
+Utilizzare:
+
+* SVG puri
+* Grafici SVG
+* Indicatori animati
+* Progress ring SVG
 
 Nessuna libreria esterna.
 
@@ -266,6 +432,10 @@ UTILIZZARE SOLO:
 * CSS3
 * JavaScript Vanilla ES6
 
+---
+
+## QUALITÀ DEL CODICE
+
 TUTTO IL CODICE DEVE ESSERE:
 
 * Modulabile
@@ -273,13 +443,38 @@ TUTTO IL CODICE DEVE ESSERE:
 * Commentato
 * Professionale
 * Responsive
+* Accessibile
+* Ottimizzato
 
-Generare ogni file separatamente:
+Utilizzare:
+
+* ES Modules
+* Event Delegation
+* Template literals
+* Componentizzazione JS
+* CSS Variables
+* BEM Naming Convention
+
+---
+
+## OUTPUT OBBLIGATORIO
+
+Generare ogni file separatamente nel formato:
 
 === nomefile ===
 
-codice completo
+[codice completo]
 
 senza omettere alcuna parte del codice.
+
+NON usare placeholder del tipo:
+
+"continua..."
+
+"ecc."
+
+"codice omesso"
+
+Ogni file deve essere completo e funzionante.
 
 Ogni pagina deve importare storage.js e utilizzare esclusivamente il layer dati condiviso.
