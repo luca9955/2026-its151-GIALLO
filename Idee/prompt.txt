@@ -1,25 +1,303 @@
-Mi aiuti a creare il lato ADMIN del sito che sto creando basandoti sul tema della ficsit, satisfactory?
+Voglio che tu agisca come un Senior Full Stack Developer specializzato in HTML, CSS e JavaScript Vanilla.
 
-La mia idea era quella di creare un sito internet di un ristorante tema satisfactory ficsit con menu, prenotazione, login, recensioni.
+Devi progettare e generare il pannello ADMIN completo di un sito web per un ristorante a tema **Satisfactory** e **FICSIT**.
 
-Mi servirebbe che mi crei più html,css,javascript che poi convergono in un unico iframe in un altro html in modo da non dover ricaricare la pagina ogni volta.
+L'interfaccia deve richiamare lo stile industriale futuristico della FICSIT:
 
-La mia idea di file per l'admin sarebbero:
+* Colori principali:
 
+  * Arancione #FF7A00
+  * Nero #111111
+  * Grigio scuro #1C1C1C
+  * Grigio chiaro #2F2F2F
+  * Bianco #FFFFFF
 
+* Design:
 
-* principale.html,principale.css,principale.js (conterrà tutte le altre pagine html)
+  * Futuristico
+  * Industriale
+  * Dashboard moderna
+  * Effetti glow arancioni
+  * Animazioni fluide
+  * Responsive desktop/tablet/mobile
+  * Font stile tecnologico
 
-* menu.html, menu.css,menu.js (avrà la possibilità di modificare: prezzo, attivo/disattivo, descrizione.    Si potrà poi aggiungere o eliminare piatti al menù.)
+---
 
-* recensioni.html,recensioni.css,recensioni.js (Si avrà la possibilità di visualizzare e, in caso, eliminare i commenti)
+# Architettura del progetto
 
-* prenotazioni.html,prenotazioni.css,prenotazioni.js(L'ADMIN potrà vedere: i tavoli prenotati, il numero di persone per ogni tavolo,  chi ha prenotato il tavolo, approvare o non approvare la prenotazione)
+Genera tutti i file separatamente.
 
-* ordinazioni.html,ordinazioni.css,ordinazioni.js (L'ADMIN vedrà: da che tavolo proviene la prenotazione, cosa è stato ordinato, se l'ordinazione è: accettata, in preparazione, consegnato. e la possibilità di modificare tutti i parametri precedentemente elencati)
+## principale.html
 
+Funzione:
 
+* Dashboard principale ADMIN
+* Sidebar laterale sinistra
+* Header superiore
+* Area contenuti centrale
 
+La dashboard deve caricare tutte le altre pagine tramite iframe senza ricaricare la pagina.
 
+Menu laterale:
 
-Restituiscimi direttamente i file corretti da scaricare
+* Dashboard
+* Gestione Menù
+* Prenotazioni
+* Ordinazioni
+* Recensioni
+* Logout
+
+L'iframe deve occupare tutto lo spazio disponibile.
+
+---
+
+## principale.css
+
+Contiene:
+
+* Layout dashboard
+* Sidebar animata
+* Header
+* Responsive
+* Tema FICSIT
+
+---
+
+## principale.js
+
+Contiene:
+
+* Cambio pagina nell'iframe
+* Evidenziazione voce attiva
+* Apertura/chiusura sidebar mobile
+* Animazioni
+
+---
+
+# Gestione Menù
+
+## menu.html
+
+Tabella amministrativa con:
+
+* Nome piatto
+* Descrizione
+* Prezzo
+* Categoria
+* Stato (Attivo/Disattivo)
+
+Funzioni:
+
+* Aggiungi piatto
+* Modifica piatto
+* Elimina piatto
+* Cerca piatto
+* Filtra categoria
+
+Popup MODAL per inserimento/modifica.
+
+---
+
+## menu.css
+
+Tema FICSIT coerente con la dashboard.
+
+---
+
+## menu.js
+
+Utilizzare dati simulati in LocalStorage.
+
+Implementare:
+
+* CRUD completo
+* Salvataggio automatico
+* Ricerca live
+* Filtri
+
+---
+
+# Gestione Recensioni
+
+## recensioni.html
+
+Visualizzazione recensioni in cards.
+
+Campi:
+
+* Nome utente
+* Data
+* Valutazione stelle
+* Commento
+
+Funzioni:
+
+* Elimina recensione
+* Cerca recensione
+* Filtra valutazione
+
+---
+
+## recensioni.css
+
+Cards futuristiche stile FICSIT.
+
+---
+
+## recensioni.js
+
+Utilizzare dati simulati in LocalStorage.
+
+---
+
+# Gestione Prenotazioni
+
+## prenotazioni.html
+
+Tabella con:
+
+* ID prenotazione
+* Nome cliente
+* Telefono
+* Email
+* Tavolo
+* Numero persone
+* Data
+* Ora
+* Stato
+
+Stati:
+
+* In attesa
+* Approvata
+* Rifiutata
+
+Funzioni:
+
+* Approva
+* Rifiuta
+* Cerca
+* Filtra
+* Modifica
+
+---
+
+## prenotazioni.css
+
+Tema coerente con dashboard.
+
+---
+
+## prenotazioni.js
+
+Dati simulati LocalStorage.
+
+Aggiornamento dinamico stato.
+
+---
+
+# Gestione Ordinazioni
+
+## ordinazioni.html
+
+Tabella amministrativa con:
+
+* ID ordine
+* Tavolo
+* Cliente
+* Piatti ordinati
+* Totale
+* Data e ora
+
+Stati ordine:
+
+* Ricevuto
+* Accettato
+* In preparazione
+* Pronto
+* Consegnato
+
+Funzioni:
+
+* Cambio stato tramite select
+* Ricerca
+* Filtri
+* Dettaglio ordine
+
+---
+
+## ordinazioni.css
+
+Tema FICSIT.
+
+---
+
+## ordinazioni.js
+
+Dati simulati LocalStorage.
+
+Aggiornamento dinamico.
+
+---
+
+# Dashboard iniziale
+
+Quando si apre principale.html mostra:
+
+* Numero prenotazioni odierne
+* Numero ordini attivi
+* Numero recensioni
+* Incasso simulato giornaliero
+
+Visualizzati tramite:
+
+* Cards statistiche
+* Grafici SVG puri
+* Nessuna libreria esterna
+
+---
+
+# Requisiti tecnici
+
+Genera codice completo e funzionante.
+
+NON utilizzare:
+
+* Bootstrap
+* Tailwind
+* React
+* Vue
+* Angular
+* jQuery
+
+Utilizzare esclusivamente:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+Il codice deve essere:
+
+* Commentato
+* Pulito
+* Scalabile
+* Professionale
+* Responsive
+
+Genera ogni file in sezioni separate:
+
+```txt
+=== principale.html ===
+codice
+
+=== principale.css ===
+codice
+
+=== principale.js ===
+codice
+```
+
+e così via per tutti i file.
+
+Fornisci il contenuto completo di ogni file senza omettere nessuna parte del codice.
