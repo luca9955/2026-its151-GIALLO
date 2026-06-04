@@ -1,0 +1,285 @@
+AGISCI COME UN SENIOR FULL STACK DEVELOPER SPECIALIZZATO IN HTML5, CSS3 E JAVASCRIPT VANILLA ES6.
+
+Devi progettare e generare un sistema completo per un ristorante a tema SATISFACTORY e FICSIT composto da:
+
+1. AREA CLIENTE
+2. AREA ADMIN
+3. LAYER DATI CONDIVISO
+
+L'obiettivo è che tutte le operazioni effettuate nell'area cliente siano immediatamente visibili nell'area admin.
+
+---
+
+## ARCHITETTURA OBBLIGATORIA
+
+L'applicazione deve essere organizzata in modo modulare.
+
+Creare una cartella:
+
+/data
+
+contenente:
+
+=== storage.js ===
+
+Questo file deve gestire l'intera persistenza dati dell'applicazione.
+
+Utilizzare LocalStorage come database simulato.
+
+Implementare funzioni centralizzate:
+
+* getMenu()
+
+* saveMenu()
+
+* getReservations()
+
+* saveReservations()
+
+* getOrders()
+
+* saveOrders()
+
+* getReviews()
+
+* saveReviews()
+
+* getDashboardStats()
+
+* initializeDatabase()
+
+Tutte le pagine CLIENT e ADMIN devono utilizzare ESCLUSIVAMENTE queste funzioni.
+
+Nessuna pagina deve accedere direttamente al LocalStorage.
+
+---
+
+## SINCRONIZZAZIONE DATI
+
+Quando un utente:
+
+* effettua una prenotazione
+* invia una recensione
+* crea un ordine
+
+i dati devono essere salvati nello storage condiviso.
+
+L'area ADMIN deve leggere gli stessi dati.
+
+Ogni modifica effettuata dall'admin deve aggiornare immediatamente il database simulato.
+
+Utilizzare:
+
+window.addEventListener("storage")
+
+per sincronizzare automaticamente i dati tra più tab aperte.
+
+---
+
+## AREA CLIENTE
+
+Generare le seguenti pagine:
+
+home.html
+
+menu.html
+
+prenotazione.html
+
+ordinazione.html
+
+recensioni.html
+
+contatti.html
+
+Ogni pagina deve avere:
+
+* design FICSIT
+* responsive
+* animazioni
+* accessibilità
+
+---
+
+## PRENOTAZIONI CLIENTE
+
+Form prenotazione con:
+
+* Nome
+* Cognome
+* Telefono
+* Email
+* Numero persone
+* Data
+* Ora
+
+Alla conferma:
+
+* generare ID univoco
+* salvare nello storage condiviso
+
+Stato iniziale:
+
+"In attesa"
+
+---
+
+## ORDINAZIONI CLIENTE
+
+Permettere al cliente di:
+
+* selezionare piatti
+* modificare quantità
+* visualizzare totale
+
+Alla conferma:
+
+* generare ordine
+* salvare nello storage condiviso
+
+Stato iniziale:
+
+"Ricevuto"
+
+---
+
+## RECENSIONI CLIENTE
+
+Form recensione:
+
+* Nome
+* Stelle
+* Commento
+
+Salvare nello storage condiviso.
+
+---
+
+## AREA ADMIN
+
+Generare:
+
+principale.html
+
+principale.css
+
+principale.js
+
+Dashboard con iframe.
+
+Menu laterale:
+
+* Dashboard
+* Gestione Menù
+* Prenotazioni
+* Ordinazioni
+* Recensioni
+* Logout
+
+---
+
+## GESTIONE PRENOTAZIONI ADMIN
+
+Visualizzare tutte le prenotazioni provenienti dall'area cliente.
+
+Funzioni:
+
+* Cerca
+* Filtra
+* Modifica
+
+Cambio stato:
+
+* In attesa
+* Approvata
+* Rifiutata
+
+Le modifiche devono aggiornare immediatamente il database condiviso.
+
+---
+
+## GESTIONE ORDINI ADMIN
+
+Visualizzare tutti gli ordini provenienti dall'area cliente.
+
+Cambio stato:
+
+* Ricevuto
+* Accettato
+* In preparazione
+* Pronto
+* Consegnato
+
+Salvataggio automatico.
+
+---
+
+## GESTIONE RECENSIONI ADMIN
+
+Visualizzare tutte le recensioni provenienti dall'area cliente.
+
+Funzioni:
+
+* Ricerca
+* Filtra
+* Elimina
+
+---
+
+## GESTIONE MENU ADMIN
+
+CRUD completo.
+
+Le modifiche al menù devono essere immediatamente visibili nell'area cliente.
+
+---
+
+## DASHBOARD ADMIN
+
+Statistiche calcolate leggendo i dati reali presenti nello storage condiviso:
+
+* Prenotazioni oggi
+* Ordini attivi
+* Numero recensioni
+* Incasso giornaliero
+
+Utilizzare SVG puri.
+
+Nessuna libreria esterna.
+
+---
+
+## REQUISITI TECNICI
+
+NON UTILIZZARE:
+
+* Bootstrap
+* Tailwind
+* React
+* Vue
+* Angular
+* jQuery
+
+UTILIZZARE SOLO:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+TUTTO IL CODICE DEVE ESSERE:
+
+* Modulabile
+* Scalabile
+* Commentato
+* Professionale
+* Responsive
+
+Generare ogni file separatamente:
+
+=== nomefile ===
+
+codice completo
+
+senza omettere alcuna parte del codice.
+
+Ogni pagina deve importare storage.js e utilizzare esclusivamente il layer dati condiviso.
