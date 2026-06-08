@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Menu FICSIT aggiornato in tempo reale dal pannello admin.">
+  <meta name="theme-color" content="#ff6a00">
+  <title>FICSIT Canteen | Menu</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/client.js"></script>
+</head>
+<body data-page="menu">
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+  <header class="site-header"><nav class="nav" aria-label="Navigazione principale"><a class="brand" href="home.html"><span class="brand__mark">F</span>FICSIT Canteen</a><div class="nav__links"><a href="home.html">Home</a><a href="prenotazione.html">Prenota</a><a href="ordinazione.html">Ordina</a><a href="recensioni.html">Recensioni</a><a href="contatti.html">Contatti</a><a href="admin/principale.html">Admin</a></div></nav></header>
+  <main id="main" class="main">
+    <section class="section">
+      <span class="eyebrow">Menu Database</span>
+      <h1>Linee Di Produzione</h1>
+      <p>I piatti disponibili sono letti esclusivamente dal layer dati condiviso.</p>
+      <div id="menuGrid" class="grid" aria-live="polite"></div>
+    </section>
+  </main>
+  <footer class="footer">Menu aggiornato via storage condiviso.</footer>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Placeholder piatto SATISFACTORY-style: burger su nastro trasportatore">
+  <rect width="640" height="420" fill="#151515"/>
+  <rect x="80" y="280" width="480" height="58" fill="#222" stroke="#ff6a00" stroke-width="6"/>
+  <g fill="#ccc"><circle cx="140" cy="309" r="17"/><circle cx="230" cy="309" r="17"/><circle cx="320" cy="309" r="17"/><circle cx="410" cy="309" r="17"/><circle cx="500" cy="309" r="17"/></g>
+  <path d="M180 230 C205 145 435 145 462 230Z" fill="#c06a28"/>
+  <rect x="185" y="230" width="275" height="28" fill="#ff6a00"/>
+  <rect x="198" y="258" width="250" height="35" fill="#321"/>
+  <text x="94" y="66" fill="#ff6a00" font-family="Arial Black, sans-serif" font-size="28">CONVEYOR BURGER MK.2</text>
+</svg>

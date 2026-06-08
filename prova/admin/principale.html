@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Terminale admin FICSIT per dashboard, menu, prenotazioni, ordini e recensioni.">
+  <meta name="theme-color" content="#ff6a00">
+  <title>FICSIT Admin | Principale</title>
+  <link rel="stylesheet" href="principale.css">
+  <script type="module" src="principale.js"></script>
+</head>
+<body>
+  <aside class="admin-shell__side" aria-label="Menu admin">
+    <a class="admin-brand" href="../home.html"><span>F</span>ADMIN</a>
+    <button data-view="dashboard" class="is-active">Dashboard</button>
+    <button data-view="menu">Gestione Menu</button>
+    <button data-view="reservations">Prenotazioni</button>
+    <button data-view="orders">Ordinazioni</button>
+    <button data-view="reviews">Recensioni</button>
+    <a class="logout" href="../home.html">Logout</a>
+  </aside>
+  <main class="admin-shell__main">
+    <header class="admin-top">
+      <div>
+        <span class="terminal-label">FICSIT OS / FOOD OPS</span>
+        <h1>Terminale Principale</h1>
+      </div>
+      <a class="client-link" href="../home.html">Area cliente</a>
+    </header>
+    <iframe id="adminFrame" title="Dashboard e viste operative admin FICSIT"></iframe>
+  </main>
+</body>
+</html>

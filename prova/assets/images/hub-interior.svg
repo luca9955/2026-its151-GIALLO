@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-label="Interno ristorante stile hub FICSIT con pannelli metallici e luci arancioni">
+  <rect width="900" height="520" fill="#111"/>
+  <path d="M0 420 H900 V520 H0Z" fill="#191919"/>
+  <g stroke="#ff6a00" stroke-width="3" opacity=".75">
+    <path d="M80 70 H820 V410 H80Z"/>
+    <path d="M80 210 H820"/>
+    <path d="M240 70 V410M450 70V410M660 70V410"/>
+  </g>
+  <g fill="#222" stroke="#ccc" opacity=".8">
+    <rect x="130" y="285" width="130" height="58"/>
+    <rect x="330" y="295" width="130" height="58"/>
+    <rect x="545" y="280" width="160" height="66"/>
+  </g>
+  <g fill="#ff6a00">
+    <rect x="90" y="95" width="720" height="10"/>
+    <rect x="140" y="455" width="620" height="12"/>
+  </g>
+  <text x="310" y="165" fill="#ff6a00" font-family="Arial Black, sans-serif" font-size="36">HUB DINING BAY</text>
+</svg>

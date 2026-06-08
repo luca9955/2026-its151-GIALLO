@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Placeholder piatto SATISFACTORY-style: torta aliena biomass">
+  <rect width="640" height="420" fill="#151515"/>
+  <rect x="190" y="190" width="260" height="150" fill="#232" stroke="#ff6a00" stroke-width="8"/>
+  <path d="M190 190 C235 145 390 145 450 190Z" fill="#75ff6a" opacity=".75"/>
+  <circle cx="270" cy="225" r="18" fill="#ff6a00"/>
+  <circle cx="350" cy="245" r="14" fill="#ff6a00"/>
+  <text x="116" y="66" fill="#ff6a00" font-family="Arial Black, sans-serif" font-size="29">ALIEN BIOMASS CAKE</text>
+</svg>

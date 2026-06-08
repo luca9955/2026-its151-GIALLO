@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Invia recensioni animate al terminale FICSIT.">
+  <meta name="theme-color" content="#ff6a00">
+  <title>FICSIT Canteen | Recensioni</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/client.js"></script>
+</head>
+<body data-page="recensioni">
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+  <header class="site-header"><nav class="nav" aria-label="Navigazione principale"><a class="brand" href="home.html"><span class="brand__mark">F</span>FICSIT Canteen</a><div class="nav__links"><a href="home.html">Home</a><a href="menu.html">Menu</a><a href="prenotazione.html">Prenota</a><a href="ordinazione.html">Ordina</a><a href="contatti.html">Contatti</a><a href="admin/principale.html">Admin</a></div></nav></header>
+  <main id="main" class="main">
+    <section class="section grid">
+      <form id="reviewForm" class="form" aria-describedby="reviewNotice">
+        <span class="eyebrow">Quality Report</span>
+        <h1>Recensioni</h1>
+        <label>Nome<input name="name" required autocomplete="name"></label>
+        <input id="ratingValue" name="rating" type="hidden" required>
+        <div id="stars" class="stars" role="group" aria-label="Rating a stelle">
+          <button class="star" type="button" data-value="1" aria-label="1 stella">★</button>
+          <button class="star" type="button" data-value="2" aria-label="2 stelle">★</button>
+          <button class="star" type="button" data-value="3" aria-label="3 stelle">★</button>
+          <button class="star" type="button" data-value="4" aria-label="4 stelle">★</button>
+          <button class="star" type="button" data-value="5" aria-label="5 stelle">★</button>
+        </div>
+        <label>Commento<textarea name="comment" rows="5" required></textarea></label>
+        <button type="submit">Invia recensione</button>
+        <p id="reviewNotice" class="notice" role="status"></p>
+      </form>
+      <aside class="panel">
+        <h2>Preview</h2>
+        <div id="reviewPreview" class="review-item" aria-live="polite"></div>
+      </aside>
+    </section>
+  </main>
+  <footer class="footer">Le recensioni sono leggibili e filtrabili dall'admin.</footer>
+</body>
+</html>
