@@ -29,7 +29,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>it.ficsit.canteen.App</mainClass>
+                    <mainClass>it.ficsit.canteen.Launcher</mainClass>
                 </configuration>
             </plugin>
         </plugins>

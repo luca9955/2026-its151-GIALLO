@@ -8,14 +8,17 @@ Applicazione desktop JavaFX che converte il sito FICSIT Canteen in un progetto i
 2. Seleziona `Open`.
 3. Scegli la cartella `prova in java`.
 4. Attendi il caricamento Maven delle dipendenze JavaFX.
-5. Apri `src/main/java/it/ficsit/canteen/App.java`.
+5. Apri `src/main/java/it/ficsit/canteen/Launcher.java`.
 6. Premi Run sul metodo `main`, oppure usa il comando Maven `javafx:run`.
+
+Se IntelliJ mostra `JavaFX runtime components are missing`, significa che stai avviando la vecchia classe `App` invece del launcher. Avvia `Launcher.java`, oppure dalla finestra Maven esegui `Plugins > javafx > javafx:run`.
 
 Serve Maven o il supporto Maven integrato in IntelliJ, perché JavaFX non è incluso nei JDK moderni.
 
 ## Struttura
 
-- `src/main/java/it/ficsit/canteen/App.java`: avvio applicazione.
+- `src/main/java/it/ficsit/canteen/Launcher.java`: classe da avviare in IntelliJ.
+- `src/main/java/it/ficsit/canteen/App.java`: applicazione JavaFX.
 - `model`: classi dati del dominio.
 - `storage`: database simulato centralizzato e persistenza su file.
 - `ui`: vecchia interfaccia Swing lasciata come riferimento.
