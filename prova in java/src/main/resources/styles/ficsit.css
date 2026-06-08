@@ -10,15 +10,14 @@
 
 .app-root {
     -fx-background-color:
-        radial-gradient(center 18% 12%, radius 55%, rgba(255,106,0,0.24), transparent),
-        linear-gradient(to bottom right, #111111, #171717 45%, #050505);
+        linear-gradient(from 0% 0% to 100% 100%, #1b120c, #111111 48%, #050505);
 }
 
 .sidebar {
     -fx-pref-width: 260px;
     -fx-padding: 24px 18px;
-    -fx-background-color: rgba(17,17,17,0.94);
-    -fx-border-color: rgba(255,106,0,0.55);
+    -fx-background-color: #111111f0;
+    -fx-border-color: #ff6a0088;
     -fx-border-width: 0 1px 0 0;
 }
 
@@ -26,7 +25,7 @@
     -fx-text-fill: -ficsit-orange;
     -fx-font-size: 30px;
     -fx-line-spacing: -8px;
-    -fx-effect: dropshadow(gaussian, rgba(255,106,0,0.75), 18, 0.3, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ff6a00bb, 18, 0.3, 0, 0);
 }
 
 .page {
@@ -36,7 +35,7 @@
 .page-title {
     -fx-text-fill: white;
     -fx-font-size: 34px;
-    -fx-effect: dropshadow(gaussian, rgba(255,106,0,0.55), 16, 0.35, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ff6a0088, 16, 0.35, 0, 0);
 }
 
 .hero-title {
@@ -47,11 +46,11 @@
 .panel-card,
 .data-row {
     -fx-padding: 18px;
-    -fx-background-color: linear-gradient(to bottom right, rgba(34,34,34,0.96), rgba(10,10,10,0.92));
-    -fx-border-color: rgba(255,106,0,0.6);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #222222f5, #0a0a0aeb);
+    -fx-border-color: #ff6a0099;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
-    -fx-effect: dropshadow(gaussian, rgba(255,106,0,0.22), 24, 0.2, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ff6a0038, 24, 0.2, 0, 0);
 }
 
 .data-row {
@@ -61,7 +60,6 @@
 .eyebrow {
     -fx-text-fill: -ficsit-orange;
     -fx-font-size: 12px;
-    -fx-letter-spacing: 0;
 }
 
 .card-title {
@@ -88,9 +86,9 @@
 .text-field,
 .text-area,
 .spinner {
-    -fx-background-color: rgba(0,0,0,0.38);
+    -fx-background-color: #00000061;
     -fx-text-fill: white;
-    -fx-border-color: rgba(255,106,0,0.45);
+    -fx-border-color: #ff6a0073;
     -fx-border-radius: 0;
     -fx-background-radius: 0;
 }
@@ -98,7 +96,7 @@
 .button:hover,
 .primary-button:hover,
 .nav-button:hover {
-    -fx-effect: dropshadow(gaussian, rgba(255,106,0,0.75), 18, 0.35, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ff6a00bf, 18, 0.35, 0, 0);
     -fx-border-color: -ficsit-orange;
 }
 
@@ -107,7 +105,7 @@
     -fx-alignment: center-left;
     -fx-background-color: -steel;
     -fx-text-fill: white;
-    -fx-border-color: rgba(255,106,0,0.35);
+    -fx-border-color: #ff6a0059;
 }
 
 .primary-button {
@@ -130,24 +128,24 @@
 }
 
 .table-seat.free {
-    -fx-background-color: rgba(25,212,107,0.18);
+    -fx-background-color: #19d46b2e;
     -fx-border-color: #19d46b;
 }
 
 .table-seat.occupied {
-    -fx-background-color: rgba(255,51,78,0.18);
+    -fx-background-color: #ff334e2e;
     -fx-border-color: #ff334e;
 }
 
 .table-seat.reserved {
-    -fx-background-color: rgba(255,106,0,0.18);
+    -fx-background-color: #ff6a002e;
     -fx-border-color: -ficsit-orange;
 }
 
 .table-seat.selected {
-    -fx-background-color: rgba(47,125,255,0.38);
+    -fx-background-color: #2f7dff61;
     -fx-border-color: #2f7dff;
-    -fx-effect: dropshadow(gaussian, rgba(47,125,255,0.85), 22, 0.35, 0, 0);
+    -fx-effect: dropshadow(gaussian, #2f7dffdd, 22, 0.35, 0, 0);
 }
 
 .tab-pane .tab-header-area .tab-header-background {
@@ -156,7 +154,7 @@
 
 .tab {
     -fx-background-color: -steel;
-    -fx-border-color: rgba(255,106,0,0.35);
+    -fx-border-color: #ff6a0059;
 }
 
 .tab:selected {
