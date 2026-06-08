@@ -26,6 +26,7 @@ Serve Maven o il supporto Maven integrato in IntelliJ, perché JavaFX non è inc
 
 ## Funzionalita
 
+- Schermata iniziale con scelta ruolo: Cliente o Amministratore.
 - Area cliente con menu, prenotazione tavoli 4x4, ordinazione, recensioni e contatti.
 - Area admin con dashboard, gestione menu, prenotazioni, ordini e recensioni.
 - Dati condivisi tra client e admin tramite `StorageService`.

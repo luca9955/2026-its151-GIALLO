@@ -42,14 +42,14 @@ public class App extends Application {
     private final StorageService storage = new StorageService();
     private final NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.ITALY);
     private final StackPane content = new StackPane();
+    private BorderPane root;
     private int selectedTable;
-    private String currentView = "dashboard";
+    private String currentView = "role";
 
     @Override
     public void start(Stage stage) {
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         root.getStyleClass().add("app-root");
-        root.setLeft(sidebar());
         root.setCenter(content);
 
         Scene scene = new Scene(root, 1280, 780);
@@ -58,7 +58,7 @@ public class App extends Application {
         stage.setMinWidth(1080);
         stage.setMinHeight(720);
         stage.setScene(scene);
-        showDashboard();
+        showRoleSelection();
         storage.addListener(this::renderCurrentView);
         stage.show();
     }
@@ -66,6 +66,7 @@ public class App extends Application {
     private void renderCurrentView() {
         switch (currentView) {
             case "client" -> showClient();
+            case "role" -> showRoleSelection();
             case "menu" -> showMenuAdmin();
             case "reservations" -> showReservationsAdmin();
             case "orders" -> showOrdersAdmin();
@@ -74,20 +75,62 @@ public class App extends Application {
         }
     }
 
-    private VBox sidebar() {
+    private void showRoleSelection() {
+        currentView = "role";
+        root.setLeft(null);
+
+        VBox rolePage = new VBox(24);
+        rolePage.getStyleClass().addAll("page", "role-page");
+        rolePage.setAlignment(Pos.CENTER);
+
+        Label title = new Label("FICSIT Canteen");
+        title.getStyleClass().add("hero-title");
+        Label subtitle = new Label("Seleziona il terminale operativo");
+        subtitle.getStyleClass().add("page-title");
+
+        HBox choices = new HBox(18);
+        choices.setAlignment(Pos.CENTER);
+        Button client = roleButton("Sono cliente", "Menu, prenotazioni, ordini, recensioni", () -> {
+            root.setLeft(sidebar("client"));
+            showClient();
+        });
+        Button admin = roleButton("Sono amministratore", "Dashboard e gestione operativa", () -> {
+            root.setLeft(sidebar("admin"));
+            showDashboard();
+        });
+        choices.getChildren().addAll(client, admin);
+        rolePage.getChildren().addAll(title, subtitle, choices);
+        content.getChildren().setAll(rolePage);
+    }
+
+    private Button roleButton(String title, String description, Runnable action) {
+        Button button = new Button(title + "\n" + description);
+        button.getStyleClass().add("role-card");
+        button.setOnAction(event -> action.run());
+        return button;
+    }
+
+    private VBox sidebar(String role) {
         VBox side = new VBox(12);
         side.getStyleClass().add("sidebar");
-        Label brand = new Label("FICSIT\nCANTEEN");
+        Label brand = new Label("FICSIT\n" + role.toUpperCase(Locale.ITALY));
         brand.getStyleClass().add("brand");
-        side.getChildren().addAll(
-                brand,
-                navButton("Dashboard", this::showDashboard),
-                navButton("Area Cliente", this::showClient),
-                navButton("Gestione Menu", this::showMenuAdmin),
-                navButton("Prenotazioni", this::showReservationsAdmin),
-                navButton("Ordinazioni", this::showOrdersAdmin),
-                navButton("Recensioni", this::showReviewsAdmin)
-        );
+        side.getChildren().add(brand);
+        if ("client".equals(role)) {
+            side.getChildren().addAll(
+                    navButton("Area Cliente", this::showClient),
+                    navButton("Cambia ruolo", this::showRoleSelection)
+            );
+        } else {
+            side.getChildren().addAll(
+                    navButton("Dashboard", this::showDashboard),
+                    navButton("Gestione Menu", this::showMenuAdmin),
+                    navButton("Prenotazioni", this::showReservationsAdmin),
+                    navButton("Ordinazioni", this::showOrdersAdmin),
+                    navButton("Recensioni", this::showReviewsAdmin),
+                    navButton("Cambia ruolo", this::showRoleSelection)
+            );
+        }
         return side;
     }
 
