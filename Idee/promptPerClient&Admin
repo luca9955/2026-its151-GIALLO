@@ -180,64 +180,277 @@ Ogni pagina deve avere:
 
 ---
 
-# PRENOTAZIONE TAVOLI INTERATTIVA
+# PRENOTAZIONE TAVOLI INTERATTIVA 3D AVANZATA
 
-La pagina prenotazione.html deve includere una mappa grafica interattiva del ristorante.
+La pagina `prenotazione.html` deve includere una planimetria tridimensionale interattiva del ristorante ispirata ai sistemi di gestione industriale FICSIT presenti nell'universo SATISFACTORY.
 
-NON utilizzare una semplice select.
+## IMPORTANTE
 
-Realizzare una vera planimetria.
+NON utilizzare una semplice griglia 2D.
 
-Struttura obbligatoria:
+NON rappresentare i tavoli come semplici quadrati o pulsanti.
 
-4 righe x 4 colonne
+NON utilizzare select, checkbox o layout tabellari tradizionali.
 
-Totale:
-
-16 tavoli
-
-Visualizzazione:
-
-[T1] [T2] [T3] [T4]
-
-[T5] [T6] [T7] [T8]
-
-[T9] [T10] [T11] [T12]
-
-[T13] [T14] [T15] [T16]
-
-Ogni tavolo deve essere rappresentato da una sagoma grafica SVG o HTML/CSS.
-
-Stati tavolo:
-
-* Libero
-* Occupato
-* Prenotato
-* Selezionato
-
-Colori:
-
-* Verde = libero
-* Rosso = occupato
-* Arancione = prenotato
-* Blu = selezionato
-
-Funzionalità:
-
-* Click per selezione tavolo
-* Hover animato
-* Effetto glow
-* Tooltip informazioni
-* Accessibilità tastiera
-* Aggiornamento dinamico
-
-Quando il cliente prenota:
-
-* il tavolo scelto viene associato alla prenotazione
-* il tavolo viene aggiornato nello storage condiviso
-* l'admin visualizza immediatamente il tavolo assegnato
+La disposizione logica dei tavoli può essere 4x4 oppure 5x5, ma la visualizzazione deve essere renderizzata in pseudo-3D.
 
 ---
+
+## TECNOLOGIE OBBLIGATORIE
+
+Utilizzare esclusivamente:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+Vietato utilizzare:
+
+* Three.js
+* Babylon.js
+* React Three Fiber
+* librerie WebGL esterne
+
+La simulazione tridimensionale deve essere realizzata tramite:
+
+* CSS Perspective
+* Transform3D
+* RotateX
+* RotateY
+* RotateZ
+* TranslateZ
+* Scale3D
+* Ombre dinamiche
+* Effetti luce CSS
+
+---
+
+## PLANIMETRIA 3D
+
+La sala deve apparire come una vera mappa tridimensionale osservata dall'alto con visuale isometrica.
+
+Esempio concettuale:
+
+```
+               T1
+        T2            T3
+
+   T4       T5     T6      T7
+
+T8      T9     T10     T11
+
+   T12    T13    T14
+
+         T15   T16
+```
+
+oppure una configurazione equivalente 5x5.
+
+L'utente deve avere la percezione di osservare una vera sala ristorante e non una tabella HTML.
+
+---
+
+## RENDERING DEI TAVOLI
+
+Ogni tavolo deve essere un oggetto pseudo-3D composto da:
+
+* Piano superiore
+* Spessore
+* Lato frontale
+* Lato laterale
+* Riflessi metallici
+* Ombra proiettata
+
+Utilizzare:
+
+* div annidati
+* pseudo-elementi ::before
+* pseudo-elementi ::after
+* transform-style: preserve-3d
+
+Ogni tavolo deve apparire simile ad un modello industriale FICSIT.
+
+---
+
+## VISUALE FICSIT INDUSTRIALE
+
+I tavoli devono avere:
+
+* Struttura metallica
+* Texture acciaio
+* Bordi illuminati
+* Glow arancione FICSIT
+* Effetti energetici
+* Indicatori LED
+
+Palette obbligatoria:
+
+* Arancione FICSIT #FF6A00
+* Nero carbone #111111
+* Grigio acciaio #222222
+* Grigio chiaro #CCCCCC
+
+---
+
+## SISTEMA TELECAMERA
+
+L'intera sala deve utilizzare una visuale pseudo-isometrica.
+
+Applicare:
+
+perspective: 1800px
+
+transform:
+rotateX(60deg)
+rotateZ(-45deg)
+
+L'effetto finale deve ricordare una console gestionale futuristica FICSIT.
+
+---
+
+## STATI DEI TAVOLI
+
+### LIBERO
+
+Colore:
+
+Verde industriale
+
+Effetti:
+
+* glow verde leggero
+* illuminazione minima
+
+---
+
+### OCCUPATO
+
+Colore:
+
+Rosso intenso
+
+Effetti:
+
+* glow rosso
+* segnalazione di utilizzo
+
+---
+
+### PRENOTATO
+
+Colore:
+
+Arancione FICSIT
+
+Effetti:
+
+* glow pulsante
+* evidenziazione industriale
+
+---
+
+### SELEZIONATO
+
+Colore:
+
+Blu elettrico
+
+Effetti:
+
+* bordo luminoso animato
+* scanner effect
+* pulse continuo
+
+---
+
+## INTERAZIONI
+
+### Hover
+
+Quando il mouse passa sopra un tavolo:
+
+* sollevamento verticale
+* aumento glow
+* ombra dinamica
+* lieve rotazione
+
+---
+
+### Click
+
+Quando un tavolo viene selezionato:
+
+* animazione scanner FICSIT
+* effetto conferma
+* cambio stato immediato
+* aggiornamento storage condiviso
+
+---
+
+### Focus Tastiera
+
+Ogni tavolo deve essere:
+
+* navigabile con TAB
+* attivabile con ENTER
+* attivabile con SPACE
+
+---
+
+## TOOLTIP INDUSTRIALE
+
+Al passaggio del mouse visualizzare:
+
+* Numero tavolo
+* Stato corrente
+* Numero posti
+* Prenotazioni associate
+* Disponibilità
+
+Il tooltip deve avere stile terminale FICSIT.
+
+---
+
+## AMBIENTE 3D COMPLETO
+
+La sala deve includere:
+
+* Pavimento metallico industriale
+* Griglie tecniche
+* Luci LED arancioni
+* Segnaletica FICSIT
+* Pannelli energetici
+* Effetti particellari CSS
+* Neon industriali
+* Indicatori di percorso
+
+L'ambiente deve sembrare una sezione operativa di una fabbrica SATISFACTORY convertita in ristorante.
+
+---
+
+## SINCRONIZZAZIONE IN TEMPO REALE
+
+Quando un tavolo viene prenotato:
+
+* aggiornare il database condiviso
+* aggiornare automaticamente la planimetria cliente
+* aggiornare automaticamente la dashboard admin
+* aggiornare automaticamente tutte le schede aperte
+
+Utilizzare obbligatoriamente:
+
+window.addEventListener("storage")
+
+e un sistema di rendering reattivo senza ricaricare la pagina.
+
+---
+
+## RISULTATO FINALE RICHIESTO
+
+La planimetria deve sembrare una vera sala tridimensionale FICSIT osservata in prospettiva isometrica, con tavoli industriali pseudo-3D completamente interattivi, animati e sincronizzati in tempo reale con il database condiviso.
+
+La percezione visiva finale deve essere quella di un videogioco gestionale futuristico e non di una classica applicazione web con una griglia di pulsanti.
+
 
 ## PRENOTAZIONI CLIENTE
 
