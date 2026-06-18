@@ -1384,3 +1384,587 @@ Il progetto finale deve sembrare:
 L'utente deve avere l'impressione di trovarsi all'interno di un videogioco gestionale AAA e non davanti a una tradizionale applicazione web.
 
 Ogni pagina deve risultare spettacolare, immersiva, professionale, altamente dettagliata e ricca di elementi interattivi.
+
+
+
+
+
+
+
+
+
+
+
+
+# ARCHITETTURA DATABASE FUTURA E MIGRAZIONE LOCALSTORAGE → MARIADB
+
+## OBIETTIVO PRINCIPALE
+
+Il sistema deve essere progettato fin dall'inizio secondo un'architettura **Database Agnostic**, permettendo una futura sostituzione completa del database simulato basato su LocalStorage con un database reale MariaDB senza dover riscrivere l'intera applicazione.
+
+La prima versione generata dovrà funzionare esclusivamente tramite:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+* LocalStorage come database simulato
+
+Tuttavia l'intera struttura del codice deve essere progettata come se in futuro fosse collegata ad un backend enterprise con:
+
+* MariaDB
+* API REST
+* Server Node.js / PHP / altro backend compatibile
+* autenticazione utenti
+* gestione sessioni
+* database relazionale
+
+---
+
+# PRINCIPIO DI SEPARAZIONE DATABASE
+
+È obbligatorio implementare una completa separazione tra:
+
+## FRONTEND
+
+Responsabile solamente di:
+
+* visualizzazione dati
+* interazioni utente
+* validazione form
+* rendering UI
+* aggiornamenti dinamici
+
+## DATA ACCESS LAYER
+
+Responsabile solamente di:
+
+* lettura dati
+* scrittura dati
+* aggiornamento dati
+* sincronizzazione
+* gestione persistenza
+
+## DATABASE ENGINE
+
+Attualmente:
+
+```
+LocalStorage
+```
+
+Futuro:
+
+```
+MariaDB tramite API
+```
+
+---
+
+# STRUTTURA OBBLIGATORIA DEL DATA LAYER
+
+La cartella:
+
+```
+/data
+```
+
+deve essere progettata come un vero livello repository enterprise.
+
+Struttura richiesta:
+
+```
+/data
+
+    storage.js
+
+    database-config.js
+
+    repositories/
+
+        menuRepository.js
+
+        reservationRepository.js
+
+        orderRepository.js
+
+        reviewRepository.js
+
+    api/
+
+        apiClient.js
+
+```
+
+---
+
+# storage.js
+
+Il file:
+
+```
+/data/storage.js
+```
+
+deve essere l'unico punto di accesso ai dati.
+
+Nessun altro file del progetto può utilizzare:
+
+```javascript
+localStorage.getItem()
+localStorage.setItem()
+localStorage.removeItem()
+```
+
+direttamente.
+
+Tutte le operazioni devono passare esclusivamente da:
+
+```javascript
+getMenu()
+
+saveMenu()
+
+getReservations()
+
+saveReservations()
+
+getOrders()
+
+saveOrders()
+
+getReviews()
+
+saveReviews()
+
+getDashboardStats()
+
+initializeDatabase()
+```
+
+---
+
+# PREPARAZIONE ALLA MIGRAZIONE MARIADB
+
+Dentro ogni funzione di storage devono essere inseriti commenti tecnici dettagliati che spiegano:
+
+* cosa fa attualmente LocalStorage
+* quale codice dovrà essere sostituito
+* quale endpoint API dovrà essere chiamato
+* quale query SQL sarà necessaria
+* come trasformare il formato dati
+* come gestire errori server
+* come gestire autenticazione
+* come gestire timeout
+* come gestire sincronizzazione realtime
+
+Esempio obbligatorio:
+
+```javascript
+async function getReservations(){
+
+    /*
+    ATTUALE IMPLEMENTAZIONE:
+    
+    Recupera le prenotazioni da LocalStorage.
+
+    MIGRAZIONE FUTURA MARIADB:
+
+    1) Sostituire questa lettura con una chiamata API:
+
+       GET /api/reservations
+
+
+    2) Il backend dovrà eseguire:
+
+       SELECT *
+       FROM reservations;
+
+
+    3) La risposta JSON dovrà mantenere
+       la stessa struttura utilizzata dal frontend.
+
+
+    4) Nessuna pagina HTML dovrà essere modificata.
+
+
+    5) Solo questo livello dati dovrà cambiare.
+    */
+
+
+    return JSON.parse(
+        localStorage.getItem("reservations")
+    ) || [];
+
+}
+```
+
+---
+
+# REPOSITORY PATTERN OBBLIGATORIO
+
+Tutte le entità devono utilizzare un sistema repository.
+
+Esempio:
+
+```
+reservationRepository.js
+```
+
+Responsabilità:
+
+* recuperare prenotazioni
+* creare prenotazioni
+* modificare stato
+* eliminare record
+
+Non deve sapere se i dati arrivano da:
+
+* LocalStorage
+* MariaDB
+* API REST
+
+---
+
+# DATABASE SCHEMA FUTURO
+
+Nel progetto devono essere presenti commenti contenenti la futura struttura MariaDB.
+
+Creare un documento:
+
+```
+/database/mariadb-schema.sql
+```
+
+contenente lo schema futuro.
+
+Prevedere almeno:
+
+## TABLE users
+
+Campi:
+
+```
+id
+nome
+cognome
+email
+telefono
+created_at
+```
+
+---
+
+## TABLE reservations
+
+Campi:
+
+```
+id
+user_id
+table_code
+persons
+date
+time
+status
+created_at
+updated_at
+```
+
+---
+
+## TABLE tables
+
+Campi:
+
+```
+id
+code
+capacity
+status
+position_x
+position_y
+position_z
+```
+
+---
+
+## TABLE orders
+
+Campi:
+
+```
+id
+reservation_id
+customer_name
+items_json
+total
+status
+created_at
+```
+
+---
+
+## TABLE menu
+
+Campi:
+
+```
+id
+name
+category
+description
+price
+image
+available
+created_at
+updated_at
+```
+
+---
+
+## TABLE reviews
+
+Campi:
+
+```
+id
+customer_name
+stars
+comment
+created_at
+```
+
+---
+
+# COMPATIBILITÀ API FUTURA
+
+Il codice deve essere predisposto per una futura sostituzione:
+
+ATTUALE:
+
+```
+Frontend
+    |
+storage.js
+    |
+LocalStorage
+```
+
+FUTURO:
+
+```
+Frontend
+    |
+storage.js
+    |
+apiClient.js
+    |
+REST API
+    |
+Backend
+    |
+MariaDB
+```
+
+---
+
+# MODALITÀ DATABASE CONFIGURABILE
+
+Creare:
+
+```
+/data/database-config.js
+```
+
+con:
+
+```javascript
+export const DATABASE_MODE = "LOCAL";
+```
+
+Commentare:
+
+```javascript
+/*
+CAMBIO FUTURO:
+
+Sostituire:
+
+LOCAL
+
+con:
+
+MARIADB
+
+
+Esempio:
+
+export const DATABASE_MODE = "MARIADB";
+
+
+Dopo questa modifica
+il frontend dovrà continuare
+a funzionare senza cambiamenti.
+*/
+```
+
+---
+
+# SISTEMA EVENTI DATABASE
+
+Implementare un sistema interno di eventi.
+
+Quando cambia un dato:
+
+* prenotazione
+* ordine
+* recensione
+* menu
+
+deve essere emesso un evento:
+
+```javascript
+database:update
+```
+
+che aggiorna automaticamente:
+
+* area cliente
+* area admin
+* dashboard
+* mappe tavoli
+* contatori
+
+---
+
+# FUTURA SINCRONIZZAZIONE SERVER
+
+Inserire commenti tecnici per futura implementazione:
+
+* WebSocket
+* Server Sent Events
+* MQTT industriale
+* notifiche realtime
+
+Esempio:
+
+```javascript
+/*
+FUTURO SISTEMA REALTIME:
+
+Sostituire:
+
+window.addEventListener("storage")
+
+con:
+
+WebSocket connection
+
+per sincronizzare:
+
+CLIENT
+ADMIN
+DATABASE SERVER
+
+in tempo reale.
+*/
+```
+
+---
+
+# NESSUN ACCOPPIAMENTO DIRETTO
+
+È vietato creare codice come:
+
+```javascript
+localStorage.getItem("orders")
+```
+
+all'interno di:
+
+* HTML
+* componenti JS
+* dashboard
+* pagine cliente
+* pagine admin
+
+Il codice deve essere sempre:
+
+```
+Pagina
+ |
+Repository
+ |
+Storage Layer
+ |
+Database Engine
+```
+
+---
+
+# DOCUMENTAZIONE MIGRAZIONE OBBLIGATORIA
+
+Generare inoltre:
+
+```
+/docs
+
+    LOCALSTORAGE_TO_MARIADB.md
+```
+
+contenente una guida completa passo passo:
+
+1. installazione MariaDB
+
+2. creazione database
+
+3. importazione schema SQL
+
+4. creazione backend API
+
+5. configurazione connessione
+
+6. modifica database-config.js
+
+7. sostituzione storage engine
+
+8. test migrazione dati
+
+9. deploy produzione
+
+---
+
+# OBIETTIVO FINALE
+
+Il progetto generato deve essere:
+
+* funzionante completamente offline tramite LocalStorage
+
+ma contemporaneamente:
+
+* pronto per diventare un gestionale enterprise con MariaDB
+* senza modificare il frontend
+* senza modificare le pagine HTML
+* senza riscrivere componenti UI
+* senza cambiare logica applicativa
+
+La sostituzione del database deve richiedere solamente:
+
+1. creazione backend API
+
+2. configurazione database
+
+3. cambio provider nel data layer
+
+4. mantenimento invariato del resto dell'applicazione
+
+L'architettura deve seguire principi:
+
+* Clean Architecture
+* Separation of Concerns
+* Repository Pattern
+* Dependency Inversion
+* Database Independence
+* Enterprise Scalability
+
+Il codice deve sembrare progettato da un team software professionale che prevede già una futura evoluzione da prototipo locale a piattaforma commerciale multi-sede FICSIT Restaurant Management System.
