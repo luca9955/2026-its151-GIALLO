@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Crea ordini cliente sincronizzati con la cucina admin FICSIT.">
+  <meta name="theme-color" content="#ff6a00">
+  <title>FICSIT Canteen | Ordinazione</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/client.js"></script>
+</head>
+<body data-page="ordinazione">
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+  <header class="site-header"><nav class="nav" aria-label="Navigazione principale"><a class="brand" href="home.html"><span class="brand__mark">F</span>FICSIT Canteen</a><div class="nav__links"><a href="home.html">Home</a><a href="menu.html">Menu</a><a href="prenotazione.html">Prenota</a><a href="recensioni.html">Recensioni</a><a href="contatti.html">Contatti</a><a href="admin/principale.html">Admin</a></div></nav></header>
+  <main id="main" class="main">
+    <section class="section">
+      <span class="eyebrow">Order Conveyor</span>
+      <h1>Ordinazione</h1>
+      <div class="grid">
+        <div id="orderGrid" class="grid" aria-live="polite"></div>
+        <form id="orderForm" class="form" aria-describedby="orderNotice">
+          <label>Nome cliente<input name="customer" required autocomplete="name"></label>
+          <label>Codice tavolo<input name="tableCode" placeholder="T7" required></label>
+          <section class="panel" aria-live="polite">
+            <h2>Totale <span id="orderTotal">0,00 EUR</span></h2>
+            <div id="orderSummary"></div>
+          </section>
+          <button type="submit">Invia ordine</button>
+          <p id="orderNotice" class="notice" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">Stato iniziale ordine: Ricevuto.</footer>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Placeholder piatto SATISFACTORY-style: noodles energetici">
+  <rect width="640" height="420" fill="#151515"/>
+  <ellipse cx="320" cy="265" rx="190" ry="86" fill="#222" stroke="#ff6a00" stroke-width="8"/>
+  <g fill="none" stroke="#75ff6a" stroke-width="10">
+    <path d="M210 250 C255 210 290 290 335 245 S430 220 470 270"/>
+    <path d="M220 282 C280 230 315 310 360 270 S430 255 455 300"/>
+  </g>
+  <g stroke="#ff6a00" stroke-width="6"><path d="M275 120 V230"/><path d="M385 120 V230"/></g>
+  <text x="128" y="66" fill="#ff6a00" font-family="Arial Black, sans-serif" font-size="30">NUCLEAR NOODLES</text>
+</svg>

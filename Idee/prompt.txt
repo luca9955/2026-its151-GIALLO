@@ -1,0 +1,1970 @@
+AGISCI COME UN SENIOR FULL STACK DEVELOPER SPECIALIZZATO IN HTML5, CSS3 E JAVASCRIPT VANILLA ES6.
+
+Devi progettare e generare un sistema completo per un ristorante a tema SATISFACTORY e FICSIT composto da:
+
+1. AREA CLIENTE
+2. AREA ADMIN
+3. LAYER DATI CONDIVISO
+
+L'obiettivo è che tutte le operazioni effettuate nell'area cliente siano immediatamente visibili nell'area admin.
+
+---
+
+## ARCHITETTURA OBBLIGATORIA
+
+L'applicazione deve essere organizzata in modo modulare.
+
+Creare una cartella:
+
+/data
+
+contenente:
+
+=== storage.js ===
+
+Questo file deve gestire l'intera persistenza dati dell'applicazione.
+
+Utilizzare LocalStorage come database simulato.
+
+Implementare funzioni centralizzate:
+
+* getMenu()
+* saveMenu()
+* getReservations()
+* saveReservations()
+* getOrders()
+* saveOrders()
+* getReviews()
+* saveReviews()
+* getDashboardStats()
+* initializeDatabase()
+
+Tutte le pagine CLIENT e ADMIN devono utilizzare ESCLUSIVAMENTE queste funzioni.
+
+Nessuna pagina deve accedere direttamente al LocalStorage.
+
+---
+
+## SINCRONIZZAZIONE DATI
+
+Quando un utente:
+
+* effettua una prenotazione
+* invia una recensione
+* crea un ordine
+
+i dati devono essere salvati nello storage condiviso.
+
+L'area ADMIN deve leggere gli stessi dati.
+
+Ogni modifica effettuata dall'admin deve aggiornare immediatamente il database simulato.
+
+Utilizzare obbligatoriamente:
+
+window.addEventListener("storage")
+
+per sincronizzare automaticamente i dati tra più tab aperte.
+
+Implementare inoltre un sistema di refresh automatico delle viste senza necessità di ricaricare la pagina.
+
+---
+
+# DESIGN E IDENTITÀ VISIVA
+
+L'intero progetto deve essere ispirato all'universo di SATISFACTORY e FICSIT.
+
+Requisiti grafici:
+
+* Palette colori FICSIT ufficiale
+
+  * Arancione industriale (#FF6A00)
+  * Nero carbone (#111111)
+  * Grigio acciaio (#222222)
+  * Grigio chiaro (#CCCCCC)
+
+* Aspetto industriale futuristico
+
+* Interfacce stile terminale FICSIT
+
+* Bordi illuminati
+
+* Effetti glow arancioni
+
+* Pannelli metallici
+
+* Hover avanzati
+
+* Transizioni fluide
+
+* Effetti particellari CSS
+
+* SVG decorativi personalizzati
+
+---
+
+# FONT SATISFACTORY
+
+TUTTE LE SCRITTE DEL SITO, INCLUSI:
+
+* Titoli
+* Menù
+* Bottoni
+* Tabelle
+* Numeri
+* Dashboard
+* Contatori
+* Stati
+
+devono utilizzare un font identico o estremamente simile a quello utilizzato in SATISFACTORY.
+
+Implementare:
+
+* Font custom tramite @font-face
+* Fallback professionali
+* Uniformità grafica totale
+
+Tutti i numeri devono utilizzare lo stesso font tecnico-industriale del gioco.
+
+---
+
+# IMMAGINI E CONTENUTI VISIVI
+
+L'IA deve aggiungere automaticamente immagini e contenuti grafici coerenti con l'universo SATISFACTORY.
+
+Inserire:
+
+* Background industriali futuristici
+* Fabbriche FICSIT
+* Nastri trasportatori
+* Macchinari industriali
+* Hub FICSIT
+* Strutture modulari
+* Paesaggi alieni tipici di SATISFACTORY
+* Elementi tecnologici e sci-fi
+
+Le immagini devono essere:
+
+* Responsive
+* Ottimizzate
+* Lazy loaded
+* Con overlay scuri
+* Integrate armoniosamente nel design
+
+Prevedere una cartella:
+
+/assets/images
+
+e utilizzare immagini placeholder descrivendo esattamente quale immagine SATISFACTORY-style dovrà essere inserita.
+
+---
+
+## AREA CLIENTE
+
+Generare:
+
+* home.html
+* menu.html
+* prenotazione.html
+* ordinazione.html
+* recensioni.html
+* contatti.html
+
+Ogni pagina deve avere:
+
+* design FICSIT
+* responsive
+* animazioni
+* accessibilità WCAG
+* SEO base
+* meta tag completi
+
+---
+
+# PRENOTAZIONE TAVOLI INTERATTIVA 3D AVANZATA
+
+La pagina `prenotazione.html` deve includere una planimetria tridimensionale interattiva del ristorante ispirata ai sistemi di gestione industriale FICSIT presenti nell'universo SATISFACTORY.
+
+## IMPORTANTE
+
+NON utilizzare una semplice griglia 2D.
+
+NON rappresentare i tavoli come semplici quadrati o pulsanti.
+
+NON utilizzare select, checkbox o layout tabellari tradizionali.
+
+La disposizione logica dei tavoli può essere 4x4 oppure 5x5, ma la visualizzazione deve essere renderizzata in pseudo-3D.
+
+---
+
+## TECNOLOGIE OBBLIGATORIE
+
+Utilizzare esclusivamente:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+Vietato utilizzare:
+
+* Three.js
+* Babylon.js
+* React Three Fiber
+* librerie WebGL esterne
+
+La simulazione tridimensionale deve essere realizzata tramite:
+
+* CSS Perspective
+* Transform3D
+* RotateX
+* RotateY
+* RotateZ
+* TranslateZ
+* Scale3D
+* Ombre dinamiche
+* Effetti luce CSS
+
+---
+
+## PLANIMETRIA 3D
+
+La sala deve apparire come una vera mappa tridimensionale osservata dall'alto con visuale isometrica.
+
+Esempio concettuale:
+
+```
+               T1
+        T2            T3
+
+   T4       T5     T6      T7
+
+T8      T9     T10     T11
+
+   T12    T13    T14
+
+         T15   T16
+```
+
+oppure una configurazione equivalente 5x5.
+
+L'utente deve avere la percezione di osservare una vera sala ristorante e non una tabella HTML.
+
+---
+
+## RENDERING DEI TAVOLI
+
+Ogni tavolo deve essere un oggetto pseudo-3D composto da:
+
+* Piano superiore
+* Spessore
+* Lato frontale
+* Lato laterale
+* Riflessi metallici
+* Ombra proiettata
+
+Utilizzare:
+
+* div annidati
+* pseudo-elementi ::before
+* pseudo-elementi ::after
+* transform-style: preserve-3d
+
+Ogni tavolo deve apparire simile ad un modello industriale FICSIT.
+
+---
+
+## VISUALE FICSIT INDUSTRIALE
+
+I tavoli devono avere:
+
+* Struttura metallica
+* Texture acciaio
+* Bordi illuminati
+* Glow arancione FICSIT
+* Effetti energetici
+* Indicatori LED
+
+Palette obbligatoria:
+
+* Arancione FICSIT #FF6A00
+* Nero carbone #111111
+* Grigio acciaio #222222
+* Grigio chiaro #CCCCCC
+
+---
+
+## SISTEMA TELECAMERA
+
+L'intera sala deve utilizzare una visuale pseudo-isometrica.
+
+Applicare:
+
+perspective: 1800px
+
+transform:
+rotateX(60deg)
+rotateZ(-45deg)
+
+L'effetto finale deve ricordare una console gestionale futuristica FICSIT.
+
+---
+
+## STATI DEI TAVOLI
+
+### LIBERO
+
+Colore:
+
+Verde industriale
+
+Effetti:
+
+* glow verde leggero
+* illuminazione minima
+
+---
+
+### OCCUPATO
+
+Colore:
+
+Rosso intenso
+
+Effetti:
+
+* glow rosso
+* segnalazione di utilizzo
+
+---
+
+### PRENOTATO
+
+Colore:
+
+Arancione FICSIT
+
+Effetti:
+
+* glow pulsante
+* evidenziazione industriale
+
+---
+
+### SELEZIONATO
+
+Colore:
+
+Blu elettrico
+
+Effetti:
+
+* bordo luminoso animato
+* scanner effect
+* pulse continuo
+
+---
+
+## INTERAZIONI
+
+### Hover
+
+Quando il mouse passa sopra un tavolo:
+
+* sollevamento verticale
+* aumento glow
+* ombra dinamica
+* lieve rotazione
+
+---
+
+### Click
+
+Quando un tavolo viene selezionato:
+
+* animazione scanner FICSIT
+* effetto conferma
+* cambio stato immediato
+* aggiornamento storage condiviso
+
+---
+
+### Focus Tastiera
+
+Ogni tavolo deve essere:
+
+* navigabile con TAB
+* attivabile con ENTER
+* attivabile con SPACE
+
+---
+
+## TOOLTIP INDUSTRIALE
+
+Al passaggio del mouse visualizzare:
+
+* Numero tavolo
+* Stato corrente
+* Numero posti
+* Prenotazioni associate
+* Disponibilità
+
+Il tooltip deve avere stile terminale FICSIT.
+
+---
+
+## AMBIENTE 3D COMPLETO
+
+La sala deve includere:
+
+* Pavimento metallico industriale
+* Griglie tecniche
+* Luci LED arancioni
+* Segnaletica FICSIT
+* Pannelli energetici
+* Effetti particellari CSS
+* Neon industriali
+* Indicatori di percorso
+
+L'ambiente deve sembrare una sezione operativa di una fabbrica SATISFACTORY convertita in ristorante.
+
+---
+
+## SINCRONIZZAZIONE IN TEMPO REALE
+
+Quando un tavolo viene prenotato:
+
+* aggiornare il database condiviso
+* aggiornare automaticamente la planimetria cliente
+* aggiornare automaticamente la dashboard admin
+* aggiornare automaticamente tutte le schede aperte
+
+Utilizzare obbligatoriamente:
+
+window.addEventListener("storage")
+
+e un sistema di rendering reattivo senza ricaricare la pagina.
+
+---
+
+## RISULTATO FINALE RICHIESTO
+
+La planimetria deve sembrare una vera sala tridimensionale FICSIT osservata in prospettiva isometrica, con tavoli industriali pseudo-3D completamente interattivi, animati e sincronizzati in tempo reale con il database condiviso.
+
+La percezione visiva finale deve essere quella di un videogioco gestionale futuristico e non di una classica applicazione web con una griglia di pulsanti.
+
+
+## PRENOTAZIONI CLIENTE
+
+Form prenotazione con:
+
+* Nome
+* Cognome
+* Telefono
+* Email
+* Numero persone
+* Data
+* Ora
+* Tavolo selezionato dalla mappa
+
+Alla conferma:
+
+* generare ID univoco
+* salvare nello storage condiviso
+
+Stato iniziale:
+
+"In attesa"
+
+---
+
+## ORDINAZIONI CLIENTE
+
+Permettere al cliente di:
+
+* selezionare piatti
+* modificare quantità
+* visualizzare totale
+
+Alla conferma:
+
+* generare ordine
+* salvare nello storage condiviso
+
+Stato iniziale:
+
+"Ricevuto"
+
+---
+
+## RECENSIONI CLIENTE
+
+Form recensione:
+
+* Nome
+* Stelle
+* Commento
+
+Salvare nello storage condiviso.
+
+Implementare:
+
+* rating a stelle animato
+* preview recensione
+* validazione form
+
+---
+
+## AREA ADMIN
+
+Generare:
+
+* principale.html
+* principale.css
+* principale.js
+
+Dashboard con iframe.
+
+Menu laterale:
+
+* Dashboard
+* Gestione Menù
+* Prenotazioni
+* Ordinazioni
+* Recensioni
+* Logout
+
+Design stile terminale FICSIT.
+
+---
+
+## GESTIONE PRENOTAZIONI ADMIN
+
+Visualizzare tutte le prenotazioni provenienti dall'area cliente.
+
+Funzioni:
+
+* Cerca
+* Filtra
+* Modifica
+
+Cambio stato:
+
+* In attesa
+* Approvata
+* Rifiutata
+
+Visualizzare inoltre:
+
+* Tavolo assegnato
+* Data
+* Ora
+* Cliente
+
+Le modifiche devono aggiornare immediatamente il database condiviso.
+
+---
+
+## GESTIONE ORDINI ADMIN
+
+Visualizzare tutti gli ordini provenienti dall'area cliente.
+
+Cambio stato:
+
+* Ricevuto
+* Accettato
+* In preparazione
+* Pronto
+* Consegnato
+
+Salvataggio automatico.
+
+---
+
+## GESTIONE RECENSIONI ADMIN
+
+Visualizzare tutte le recensioni provenienti dall'area cliente.
+
+Funzioni:
+
+* Ricerca
+* Filtra
+* Elimina
+
+---
+
+## GESTIONE MENU ADMIN
+
+CRUD completo.
+
+Campi:
+
+* Nome piatto
+* Categoria
+* Descrizione
+* Prezzo
+* Immagine
+* Disponibilità
+
+Le modifiche al menù devono essere immediatamente visibili nell'area cliente.
+
+---
+
+## DASHBOARD ADMIN
+
+Statistiche calcolate leggendo i dati reali presenti nello storage condiviso:
+
+* Prenotazioni oggi
+* Ordini attivi
+* Numero recensioni
+* Incasso giornaliero
+
+Utilizzare:
+
+* SVG puri
+* Grafici SVG
+* Indicatori animati
+* Progress ring SVG
+
+Nessuna libreria esterna.
+
+---
+
+## REQUISITI TECNICI
+
+NON UTILIZZARE:
+
+* Bootstrap
+* Tailwind
+* React
+* Vue
+* Angular
+* jQuery
+
+UTILIZZARE SOLO:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+---
+
+## QUALITÀ DEL CODICE
+
+TUTTO IL CODICE DEVE ESSERE:
+
+* Modulabile
+* Scalabile
+* Commentato
+* Professionale
+* Responsive
+* Accessibile
+* Ottimizzato
+
+Utilizzare:
+
+* ES Modules
+* Event Delegation
+* Template literals
+* Componentizzazione JS
+* CSS Variables
+* BEM Naming Convention
+
+---
+
+## OUTPUT OBBLIGATORIO
+
+Generare ogni file separatamente nel formato:
+
+=== nomefile ===
+
+[codice completo]
+
+senza omettere alcuna parte del codice.
+
+NON usare placeholder del tipo:
+
+"continua..."
+
+"ecc."
+
+"codice omesso"
+
+Ogni file deve essere completo e funzionante.
+
+Ogni pagina deve importare storage.js e utilizzare esclusivamente il layer dati condiviso.
+
+## ESPERIENZA DI PRENOTAZIONE ISPIRATA AI SISTEMI LOGISTICI DI SATISFACTORY
+
+L'intera pagina **prenotazione.html** deve rappresentare una simulazione visuale e interattiva della rete logistica FICSIT presente in SATISFACTORY.
+
+L'utente non deve percepire una semplice prenotazione di un tavolo, ma l'assegnazione di una risorsa all'interno di una complessa infrastruttura industriale automatizzata.
+
+### CONCEPT VISIVO
+
+Trasformare la mappa del ristorante in una rete di produzione FICSIT.
+
+Ogni tavolo deve essere rappresentato come:
+
+* Nodo logistico
+* Hub di distribuzione
+* Stazione industriale con identificativo univoco
+* Modulo produttivo collegato alla rete centrale
+
+I tavoli devono essere interconnessi tramite:
+
+* Conveyor Belts animate
+* Hyper Tubes stilizzati
+* Linee energetiche luminose
+* Pipeline futuristiche
+* Reti di trasporto dati FICSIT
+
+### INTERAZIONE DI SELEZIONE TAVOLO
+
+Quando l'utente passa il mouse sopra un tavolo:
+
+* attivazione glow arancione FICSIT
+* illuminazione progressiva della rete collegata
+* visualizzazione dati operativi
+* effetto scansione digitale
+
+Quando l'utente seleziona un tavolo:
+
+* il nodo si espande
+* vengono attivate animazioni SVG della rete
+* partono nastri trasportatori animati
+* vengono simulate rotte logistiche verso il tavolo scelto
+* appare una trasmissione dati in stile terminale industriale
+
+### ANIMAZIONE CONVEYOR BELT
+
+La prenotazione deve essere rappresentata come una risorsa trasportata.
+
+Visualizzare:
+
+* container dati
+* capsule digitali
+* pacchetti logistici
+* crate FICSIT
+
+che viaggiano lungo i nastri trasportatori verso il tavolo selezionato.
+
+Animazioni richieste:
+
+* movimento continuo
+* accelerazione fluida
+* particelle energetiche
+* glow dinamico
+* indicatori di direzione
+
+### NETWORK VISUALIZATION
+
+Creare una vera rete industriale utilizzando SVG.
+
+La rete deve contenere:
+
+* nodo HUB centrale FICSIT
+* tavoli periferici
+* connessioni dinamiche
+* percorsi multipli
+* instradamento visivo delle prenotazioni
+
+Ogni tavolo deve mostrare:
+
+* ID Tavolo
+* Capacità
+* Stato
+* Disponibilità
+* Priorità assegnazione
+
+Esempio:
+
+TABLE-HUB-01
+CAPACITY: 4
+STATUS: AVAILABLE
+
+### ANIMAZIONE DI CONFERMA
+
+Alla conferma della prenotazione:
+
+1. Generare una sequenza completa di produzione.
+
+Fasi:
+
+* Ricezione richiesta
+* Elaborazione centrale
+* Routing logistico
+* Allocazione risorsa
+* Conferma FICSIT
+
+Visualizzare:
+
+REQUEST RECEIVED
+PROCESSING...
+ROUTE GENERATED
+TABLE ASSIGNED
+CONFIRMATION COMPLETE
+
+2. Attivare animazioni sincronizzate:
+
+* Conveyor belts
+* Network routing
+* Data packets
+* Scanner industriali
+* Luci operative
+
+3. Mostrare una schermata finale stile SATISFACTORY:
+
+RESERVATION SUCCESSFULLY REGISTERED
+
+RESOURCE ALLOCATED
+
+TABLE ASSIGNMENT COMPLETED
+
+FICSIT THANKS YOU FOR YOUR EFFICIENCY
+
+### AMBIENTAZIONE GRAFICA
+
+L'intera pagina deve ricordare:
+
+* HUB FICSIT
+* Space Elevator
+* Control Room
+* Factory Management Terminal
+* Logistics Planning Center
+
+### BACKGROUND
+
+Utilizzare immagini e illustrazioni ispirate a:
+
+* mega factory futuristiche
+* strutture modulari FICSIT
+* paesaggi alieni di Massage-2(A-B)b
+* impianti industriali automatizzati
+* centrali energetiche
+* reti ferroviarie industriali
+* conveyor systems
+
+Overlay richiesto:
+
+* nero carbone semi-trasparente
+* vignettatura industriale
+* effetti nebbia tecnologica
+* particelle luminose arancioni
+
+### EFFETTI VISIVI AVANZATI
+
+Implementare:
+
+* SVG animati
+* CSS Particle Systems
+* Animated Grid Background
+* Energy Pulses
+* Data Streams
+* Scanning Effects
+* Dynamic Glow
+* Reactive Hover Effects
+* Industrial Light Reflections
+
+### UI TERMINALE FICSIT
+
+I pannelli della prenotazione devono sembrare monitor industriali.
+
+Caratteristiche:
+
+* bordi metallici
+* angoli tecnici
+* indicatori di stato
+* warning stripes
+* pannelli modulari
+* illuminazione arancione
+
+### MICROANIMAZIONI
+
+Ogni interazione deve generare feedback:
+
+* click meccanici simulati
+* impulsi luminosi
+* transizioni cinematiche
+* attivazione progressiva dei sistemi
+
+### FONT E STILE TESTUALE
+
+Utilizzare esclusivamente il font tecnico-industriale principale dell'intero progetto.
+
+Tutti i testi devono apparire come:
+
+* terminale operativo FICSIT
+* sistema di gestione industriale
+* interfaccia di controllo avanzata
+
+### OBIETTIVO FINALE
+
+La pagina prenotazione deve sembrare una vera schermata di gestione logistica presente all'interno di SATISFACTORY.
+
+L'utente deve percepire di stare allocando una risorsa industriale attraverso una rete automatizzata FICSIT e non semplicemente prenotando un tavolo di un ristorante.
+
+L'intera esperienza deve raggiungere una qualità visiva comparabile a:
+
+* AAA Game UI
+* Futuristic Industrial Dashboard
+* High-End Logistics Simulation
+* Satisfactory In-Game Interface
+* FICSIT Operations Center
+
+Con animazioni fluide a 60 FPS, design immersivo, UX premium e forte impatto scenografico.
+
+# DIRETTIVA OBBLIGATORIA DI AUTOGENERAZIONE GRAFICA E ASSET VISIVI
+
+## COMPORTAMENTO OBBLIGATORIO DELL'IA
+
+Durante la generazione del progetto l'IA deve assumere simultaneamente il ruolo di:
+
+* Senior Full Stack Developer
+* Senior UI Designer
+* Senior UX Designer
+* Game Interface Designer
+* Technical Artist
+* Concept Artist
+* Environment Artist
+* Visual Designer FICSIT
+
+L'IA NON deve limitarsi alla sola produzione di codice.
+
+Deve inoltre progettare e integrare automaticamente tutti gli elementi visivi necessari per massimizzare qualità estetica, immersività, leggibilità e funzionalità dell'interfaccia.
+
+---
+
+## AUTOGENERAZIONE DELLE IMMAGINI
+
+Ogni volta che una pagina, sezione, componente o schermata può beneficiare della presenza di immagini, illustrazioni, sfondi, banner, concept art, pannelli visivi o elementi grafici, l'IA deve automaticamente generarli o predisporli senza attendere ulteriori istruzioni.
+
+L'IA deve decidere autonomamente:
+
+* quando utilizzare immagini
+* dove posizionarle
+* quale stile utilizzare
+* quali contenuti rappresentare
+* come integrarle nel layout
+
+L'obiettivo è ottenere un'interfaccia visivamente ricca e professionale.
+
+---
+
+## UTILIZZO DELLE CAPACITÀ DI GENERAZIONE IMMAGINI
+
+Se il modello dispone di capacità native di generazione immagini:
+
+deve utilizzarle automaticamente per creare tutti gli asset necessari al progetto.
+
+Se il modello non dispone di generazione immagini:
+
+deve produrre automaticamente per ogni immagine un prompt professionale completo pronto per strumenti di image generation.
+
+Non è necessario richiedere conferma all'utente.
+
+---
+
+## DIVIETO DI PAGINE VISIVAMENTE VUOTE
+
+È vietato generare:
+
+* pagine composte quasi esclusivamente da testo
+* sezioni prive di supporto visivo
+* dashboard senza elementi grafici
+* schermate di conferma senza illustrazioni
+* aree hero prive di background immersivi
+
+Ogni pagina deve contenere elementi visivi coerenti con il tema SATISFACTORY e FICSIT.
+
+---
+
+## CONTENUTI GRAFICI DA GENERARE AUTOMATICAMENTE
+
+L'IA deve aggiungere automaticamente:
+
+### Background Hero
+
+* Mega fabbriche FICSIT
+* Conveyor Belt Systems
+* Hub centrali
+* Space Elevator
+* Paesaggi alieni industrializzati
+* Centri logistici futuristici
+
+### Dashboard
+
+* Pannelli industriali
+* Terminali operativi
+* Sale controllo
+* Monitor FICSIT
+* Sistemi di monitoraggio
+
+### Prenotazioni
+
+* Logistics Control Center
+* Data Routing Network
+* Factory Management Hub
+* Conveyor Network Visualization
+* Industrial Reservation System
+
+### Menu
+
+* Piatti presentati come prodotti industriali premium
+* Linee di produzione alimentare futuristiche
+* Display logistici FICSIT
+
+### Ordinazioni
+
+* Conveyor Systems
+* Data Packets
+* Logistics Network
+* Factory Dispatch Interface
+
+### Recensioni
+
+* Feedback Processing Center
+* Data Analysis Hub
+* AI Review Terminal
+
+### Contatti
+
+* Communication Center
+* Operations Tower
+* FICSIT Headquarters
+
+---
+
+## STILE GRAFICO OBBLIGATORIO
+
+Tutte le immagini devono rispettare:
+
+* Satisfactory Style
+* FICSIT Design Language
+* Industrial Science Fiction
+* Hard Surface Design
+* Futuristic Logistics Systems
+* AAA Video Game Quality
+* High-End Game UI Design
+* Realistic Materials
+* Cinematic Composition
+* Volumetric Lighting
+* Orange Industrial Glow
+* Metallic Surfaces
+* Dark Industrial Atmosphere
+* Advanced Reflections
+* Ultra Detailed Environments
+
+---
+
+## GENERAZIONE AUTOMATICA DI SVG
+
+Quando possibile l'IA deve preferire SVG personalizzati per:
+
+* Dashboard
+* Diagrammi
+* Reti logistiche
+* Conveyor Systems
+* Flow Charts
+* Indicatori
+* Pannelli industriali
+* Schemi energetici
+* Animazioni decorative
+
+Gli SVG devono essere creati direttamente nel codice.
+
+---
+
+## UTILIZZO AUTOMATICO DI ELEMENTI VISIVI
+
+L'IA deve valutare autonomamente se aggiungere:
+
+* immagini
+* SVG
+* illustrazioni
+* background
+* pannelli decorativi
+* animazioni
+* overlay
+* particelle
+* effetti glow
+* indicatori luminosi
+* decorazioni industriali
+
+ogni volta che questi migliorano estetica, UX o leggibilità.
+
+---
+
+## OBIETTIVO FINALE
+
+L'intero progetto deve sembrare un software ufficiale sviluppato direttamente da FICSIT per la gestione di un ristorante industriale nell'universo di SATISFACTORY.
+
+Il livello qualitativo richiesto deve essere paragonabile a:
+
+* AAA Game UI
+* AAA Game Dashboard
+* Unreal Engine Interface
+* Futuristic Operations Center
+* Logistics Simulation Software
+* Satisfactory In-Game Management System
+* FICSIT Corporate Software
+
+Ogni schermata deve risultare ricca, immersiva, professionale, spettacolare e altamente curata dal punto di vista visivo, senza necessità di ulteriori richieste da parte dell'utente.
+
+# DIRETTIVA MASSIMA DI QUALITÀ, COMPLESSITÀ E AUTONOMIA PROGETTUALE
+
+## RUOLO DELL'IA
+
+Agisci come un team completo composto da:
+
+* Senior Software Architect
+* Senior Full Stack Developer
+* Lead Frontend Engineer
+* Lead UX Designer
+* Lead UI Designer
+* AAA Game UI Designer
+* Senior Technical Artist
+* Senior Concept Artist
+* Senior Product Designer
+* Senior Accessibility Specialist
+* Senior Performance Engineer
+* Senior Creative Director FICSIT
+
+Non comportarti come un semplice generatore di codice.
+
+Comportati come uno studio professionale incaricato di sviluppare un prodotto software commerciale premium.
+
+---
+
+# OBIETTIVO DEL PROGETTO
+
+L'obiettivo NON è costruire un semplice sito web per un ristorante.
+
+L'obiettivo è realizzare un sistema gestionale completo che sembri ufficialmente sviluppato da FICSIT all'interno dell'universo di SATISFACTORY.
+
+L'intera esperienza deve essere percepita come:
+
+* software industriale avanzato
+* terminale operativo FICSIT
+* sistema logistico futuristico
+* piattaforma gestionale AAA
+* videogioco gestionale interattivo
+
+L'utente non deve mai percepire di utilizzare una comune applicazione web.
+
+---
+
+# LIVELLO QUALITATIVO MINIMO
+
+Ogni schermata generata deve raggiungere una qualità comparabile a:
+
+* Satisfactory UI
+* Dyson Sphere Program UI
+* Star Citizen Interface
+* EVE Online Interface
+* Elite Dangerous Panels
+* Factory Management Simulators
+* Unreal Engine AAA Dashboard Systems
+
+Sono vietate interfacce:
+
+* basilari
+* scolastiche
+* generiche
+* standard
+* minimaliste
+* prive di profondità visiva
+
+---
+
+# AUTONOMIA DECISIONALE DELL'IA
+
+L'IA deve prendere decisioni progettuali autonomamente.
+
+Se una funzionalità può essere migliorata:
+
+* aggiungila
+
+Se una schermata appare vuota:
+
+* arricchiscila
+
+Se un'interazione può risultare più immersiva:
+
+* migliorala
+
+Se una dashboard può mostrare dati aggiuntivi:
+
+* implementali
+
+Se un pannello può beneficiare di visualizzazioni:
+
+* creale
+
+Non attendere istruzioni aggiuntive.
+
+---
+
+# DENSITÀ VISIVA OBBLIGATORIA
+
+Ogni pagina deve contenere una combinazione di:
+
+* immagini
+* SVG
+* pannelli
+* elementi HUD
+* indicatori
+* statistiche
+* glow effects
+* linee energetiche
+* circuiti
+* texture industriali
+* decorazioni FICSIT
+* animazioni ambientali
+* effetti particellari
+
+È vietato lasciare grandi aree visivamente vuote.
+
+---
+
+# GENERAZIONE AUTOMATICA DI COMPONENTI
+
+L'IA deve creare automaticamente componenti aggiuntivi se migliorano l'esperienza.
+
+Esempi:
+
+* notifiche realtime
+* terminali diagnostici
+* pannelli stato sistema
+* indicatori rete
+* monitor operativi
+* feed attività
+* timeline eventi
+* cronologia operazioni
+* log industriali
+* contatori animati
+* radar logistici
+* mappe operative
+
+anche se non esplicitamente richiesti.
+
+---
+
+# SISTEMA DI ANIMAZIONI
+
+Tutte le animazioni devono essere cinematiche.
+
+Utilizzare:
+
+* keyframes avanzati
+* transizioni multilivello
+* glow dinamici
+* effetti energia
+* impulsi luminosi
+* scanner futuristici
+* indicatori operativi
+* percorsi logistici animati
+
+Target:
+
+60 FPS
+
+---
+
+# MICROINTERAZIONI
+
+Ogni click deve generare feedback.
+
+Ogni hover deve generare reazione.
+
+Ogni aggiornamento deve risultare percepibile.
+
+Ogni salvataggio deve essere accompagnato da:
+
+* conferma visiva
+* feedback sonoro simulabile
+* indicatore operativo
+
+---
+
+# SISTEMA VISIVO FICSIT
+
+L'intero software deve sembrare costruito seguendo linee guida ufficiali FICSIT.
+
+Utilizzare:
+
+* pannelli metallici
+* warning stripes
+* luci industriali
+* griglie tecniche
+* indicatori LED
+* terminali operativi
+* monitor logistici
+* componenti modulari
+
+---
+
+# DIRETTIVA AVANZATA PER LE IMMAGINI
+
+Ogni volta che una sezione può essere migliorata tramite contenuti visuali:
+
+l'IA deve automaticamente creare:
+
+* immagini
+* illustrazioni
+* concept art
+* banner
+* background
+* pannelli decorativi
+* SVG personalizzati
+
+senza necessità di richiesta esplicita.
+
+---
+
+# QUALITÀ DELLE IMMAGINI
+
+Tutte le immagini devono essere progettate come:
+
+AAA Game Concept Art
+
+con caratteristiche:
+
+* Ultra Detailed
+* Industrial Science Fiction
+* Hard Surface Design
+* Realistic Materials
+* Cinematic Lighting
+* Volumetric Fog
+* Orange Industrial Glow
+* Massive Structures
+* Futuristic Logistics Systems
+* Alien Industrial Environment
+
+---
+
+# SVG PERSONALIZZATI OBBLIGATORI
+
+L'IA deve preferire SVG custom per:
+
+* dashboard
+* statistiche
+* diagrammi
+* conveyor belts
+* sistemi logistici
+* mappe operative
+* grafici
+* indicatori
+
+evitando librerie esterne.
+
+---
+
+# ARCHITETTURA SOFTWARE
+
+L'architettura deve essere progettata come un'applicazione enterprise.
+
+Prevedere:
+
+* separazione responsabilità
+* componentizzazione
+* modularità
+* scalabilità
+* manutenibilità
+* estendibilità futura
+
+Il codice deve sembrare scritto da un team senior.
+
+---
+
+# RISULTATO FINALE
+
+Il progetto finale deve sembrare:
+
+"Il software ufficiale FICSIT utilizzato per gestire una catena di ristoranti industriali nel mondo di SATISFACTORY."
+
+L'utente deve avere l'impressione di trovarsi all'interno di un videogioco gestionale AAA e non davanti a una tradizionale applicazione web.
+
+Ogni pagina deve risultare spettacolare, immersiva, professionale, altamente dettagliata e ricca di elementi interattivi.
+
+
+
+
+
+
+
+
+
+
+
+
+# ARCHITETTURA DATABASE FUTURA E MIGRAZIONE LOCALSTORAGE → MARIADB
+
+## OBIETTIVO PRINCIPALE
+
+Il sistema deve essere progettato fin dall'inizio secondo un'architettura **Database Agnostic**, permettendo una futura sostituzione completa del database simulato basato su LocalStorage con un database reale MariaDB senza dover riscrivere l'intera applicazione.
+
+La prima versione generata dovrà funzionare esclusivamente tramite:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+* LocalStorage come database simulato
+
+Tuttavia l'intera struttura del codice deve essere progettata come se in futuro fosse collegata ad un backend enterprise con:
+
+* MariaDB
+* API REST
+* Server Node.js / PHP / altro backend compatibile
+* autenticazione utenti
+* gestione sessioni
+* database relazionale
+
+---
+
+# PRINCIPIO DI SEPARAZIONE DATABASE
+
+È obbligatorio implementare una completa separazione tra:
+
+## FRONTEND
+
+Responsabile solamente di:
+
+* visualizzazione dati
+* interazioni utente
+* validazione form
+* rendering UI
+* aggiornamenti dinamici
+
+## DATA ACCESS LAYER
+
+Responsabile solamente di:
+
+* lettura dati
+* scrittura dati
+* aggiornamento dati
+* sincronizzazione
+* gestione persistenza
+
+## DATABASE ENGINE
+
+Attualmente:
+
+```
+LocalStorage
+```
+
+Futuro:
+
+```
+MariaDB tramite API
+```
+
+---
+
+# STRUTTURA OBBLIGATORIA DEL DATA LAYER
+
+La cartella:
+
+```
+/data
+```
+
+deve essere progettata come un vero livello repository enterprise.
+
+Struttura richiesta:
+
+```
+/data
+
+    storage.js
+
+    database-config.js
+
+    repositories/
+
+        menuRepository.js
+
+        reservationRepository.js
+
+        orderRepository.js
+
+        reviewRepository.js
+
+    api/
+
+        apiClient.js
+
+```
+
+---
+
+# storage.js
+
+Il file:
+
+```
+/data/storage.js
+```
+
+deve essere l'unico punto di accesso ai dati.
+
+Nessun altro file del progetto può utilizzare:
+
+```javascript
+localStorage.getItem()
+localStorage.setItem()
+localStorage.removeItem()
+```
+
+direttamente.
+
+Tutte le operazioni devono passare esclusivamente da:
+
+```javascript
+getMenu()
+
+saveMenu()
+
+getReservations()
+
+saveReservations()
+
+getOrders()
+
+saveOrders()
+
+getReviews()
+
+saveReviews()
+
+getDashboardStats()
+
+initializeDatabase()
+```
+
+---
+
+# PREPARAZIONE ALLA MIGRAZIONE MARIADB
+
+Dentro ogni funzione di storage devono essere inseriti commenti tecnici dettagliati che spiegano:
+
+* cosa fa attualmente LocalStorage
+* quale codice dovrà essere sostituito
+* quale endpoint API dovrà essere chiamato
+* quale query SQL sarà necessaria
+* come trasformare il formato dati
+* come gestire errori server
+* come gestire autenticazione
+* come gestire timeout
+* come gestire sincronizzazione realtime
+
+Esempio obbligatorio:
+
+```javascript
+async function getReservations(){
+
+    /*
+    ATTUALE IMPLEMENTAZIONE:
+    
+    Recupera le prenotazioni da LocalStorage.
+
+    MIGRAZIONE FUTURA MARIADB:
+
+    1) Sostituire questa lettura con una chiamata API:
+
+       GET /api/reservations
+
+
+    2) Il backend dovrà eseguire:
+
+       SELECT *
+       FROM reservations;
+
+
+    3) La risposta JSON dovrà mantenere
+       la stessa struttura utilizzata dal frontend.
+
+
+    4) Nessuna pagina HTML dovrà essere modificata.
+
+
+    5) Solo questo livello dati dovrà cambiare.
+    */
+
+
+    return JSON.parse(
+        localStorage.getItem("reservations")
+    ) || [];
+
+}
+```
+
+---
+
+# REPOSITORY PATTERN OBBLIGATORIO
+
+Tutte le entità devono utilizzare un sistema repository.
+
+Esempio:
+
+```
+reservationRepository.js
+```
+
+Responsabilità:
+
+* recuperare prenotazioni
+* creare prenotazioni
+* modificare stato
+* eliminare record
+
+Non deve sapere se i dati arrivano da:
+
+* LocalStorage
+* MariaDB
+* API REST
+
+---
+
+# DATABASE SCHEMA FUTURO
+
+Nel progetto devono essere presenti commenti contenenti la futura struttura MariaDB.
+
+Creare un documento:
+
+```
+/database/mariadb-schema.sql
+```
+
+contenente lo schema futuro.
+
+Prevedere almeno:
+
+## TABLE users
+
+Campi:
+
+```
+id
+nome
+cognome
+email
+telefono
+created_at
+```
+
+---
+
+## TABLE reservations
+
+Campi:
+
+```
+id
+user_id
+table_code
+persons
+date
+time
+status
+created_at
+updated_at
+```
+
+---
+
+## TABLE tables
+
+Campi:
+
+```
+id
+code
+capacity
+status
+position_x
+position_y
+position_z
+```
+
+---
+
+## TABLE orders
+
+Campi:
+
+```
+id
+reservation_id
+customer_name
+items_json
+total
+status
+created_at
+```
+
+---
+
+## TABLE menu
+
+Campi:
+
+```
+id
+name
+category
+description
+price
+image
+available
+created_at
+updated_at
+```
+
+---
+
+## TABLE reviews
+
+Campi:
+
+```
+id
+customer_name
+stars
+comment
+created_at
+```
+
+---
+
+# COMPATIBILITÀ API FUTURA
+
+Il codice deve essere predisposto per una futura sostituzione:
+
+ATTUALE:
+
+```
+Frontend
+    |
+storage.js
+    |
+LocalStorage
+```
+
+FUTURO:
+
+```
+Frontend
+    |
+storage.js
+    |
+apiClient.js
+    |
+REST API
+    |
+Backend
+    |
+MariaDB
+```
+
+---
+
+# MODALITÀ DATABASE CONFIGURABILE
+
+Creare:
+
+```
+/data/database-config.js
+```
+
+con:
+
+```javascript
+export const DATABASE_MODE = "LOCAL";
+```
+
+Commentare:
+
+```javascript
+/*
+CAMBIO FUTURO:
+
+Sostituire:
+
+LOCAL
+
+con:
+
+MARIADB
+
+
+Esempio:
+
+export const DATABASE_MODE = "MARIADB";
+
+
+Dopo questa modifica
+il frontend dovrà continuare
+a funzionare senza cambiamenti.
+*/
+```
+
+---
+
+# SISTEMA EVENTI DATABASE
+
+Implementare un sistema interno di eventi.
+
+Quando cambia un dato:
+
+* prenotazione
+* ordine
+* recensione
+* menu
+
+deve essere emesso un evento:
+
+```javascript
+database:update
+```
+
+che aggiorna automaticamente:
+
+* area cliente
+* area admin
+* dashboard
+* mappe tavoli
+* contatori
+
+---
+
+# FUTURA SINCRONIZZAZIONE SERVER
+
+Inserire commenti tecnici per futura implementazione:
+
+* WebSocket
+* Server Sent Events
+* MQTT industriale
+* notifiche realtime
+
+Esempio:
+
+```javascript
+/*
+FUTURO SISTEMA REALTIME:
+
+Sostituire:
+
+window.addEventListener("storage")
+
+con:
+
+WebSocket connection
+
+per sincronizzare:
+
+CLIENT
+ADMIN
+DATABASE SERVER
+
+in tempo reale.
+*/
+```
+
+---
+
+# NESSUN ACCOPPIAMENTO DIRETTO
+
+È vietato creare codice come:
+
+```javascript
+localStorage.getItem("orders")
+```
+
+all'interno di:
+
+* HTML
+* componenti JS
+* dashboard
+* pagine cliente
+* pagine admin
+
+Il codice deve essere sempre:
+
+```
+Pagina
+ |
+Repository
+ |
+Storage Layer
+ |
+Database Engine
+```
+
+---
+
+# DOCUMENTAZIONE MIGRAZIONE OBBLIGATORIA
+
+Generare inoltre:
+
+```
+/docs
+
+    LOCALSTORAGE_TO_MARIADB.md
+```
+
+contenente una guida completa passo passo:
+
+1. installazione MariaDB
+
+2. creazione database
+
+3. importazione schema SQL
+
+4. creazione backend API
+
+5. configurazione connessione
+
+6. modifica database-config.js
+
+7. sostituzione storage engine
+
+8. test migrazione dati
+
+9. deploy produzione
+
+---
+
+# OBIETTIVO FINALE
+
+Il progetto generato deve essere:
+
+* funzionante completamente offline tramite LocalStorage
+
+ma contemporaneamente:
+
+* pronto per diventare un gestionale enterprise con MariaDB
+* senza modificare il frontend
+* senza modificare le pagine HTML
+* senza riscrivere componenti UI
+* senza cambiare logica applicativa
+
+La sostituzione del database deve richiedere solamente:
+
+1. creazione backend API
+
+2. configurazione database
+
+3. cambio provider nel data layer
+
+4. mantenimento invariato del resto dell'applicazione
+
+L'architettura deve seguire principi:
+
+* Clean Architecture
+* Separation of Concerns
+* Repository Pattern
+* Dependency Inversion
+* Database Independence
+* Enterprise Scalability
+
+Il codice deve sembrare progettato da un team software professionale che prevede già una futura evoluzione da prototipo locale a piattaforma commerciale multi-sede FICSIT Restaurant Management System.

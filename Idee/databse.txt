@@ -1,0 +1,7 @@
+Il database conterrà:
+- Menu, con tutti i piatti (antipasti, primi, secondi, dessert)
+- Recensioni, le recensioni degli utenti verranno salvate per un certo periodo di tempo
+- Ordini, verranno salvati temporaneamente in una parte del database
+- Prenotazioni, salvate le prenotazioni con nome, orario, numero persone + (opzionale) numero del tavolo
+- Credenziali, conterrà le credenziali di utenti e admin
+

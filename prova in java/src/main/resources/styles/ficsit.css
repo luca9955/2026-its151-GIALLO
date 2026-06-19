@@ -1,0 +1,198 @@
+.root {
+    -ficsit-orange: #ff6a00;
+    -coal: #111111;
+    -steel: #222222;
+    -soft-steel: #2d2d2d;
+    -light-steel: #cccccc;
+    -fx-font-family: "Arial Black", "Agency FB", "Segoe UI", sans-serif;
+    -fx-background-color: -coal;
+}
+
+.app-root {
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 100% 100%, #1b120c, #111111 48%, #050505);
+}
+
+.sidebar {
+    -fx-pref-width: 260px;
+    -fx-padding: 24px 18px;
+    -fx-background-color: #111111f0;
+    -fx-border-color: #ff6a0088;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.brand {
+    -fx-text-fill: -ficsit-orange;
+    -fx-font-size: 30px;
+    -fx-line-spacing: -8px;
+    -fx-effect: dropshadow(gaussian, #ff6a00bb, 18, 0.3, 0, 0);
+}
+
+.page {
+    -fx-padding: 28px;
+}
+
+.role-page {
+    -fx-min-height: 720px;
+}
+
+.role-card {
+    -fx-min-width: 300px;
+    -fx-min-height: 170px;
+    -fx-padding: 24px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2a2a2af5, #0a0a0af0);
+    -fx-border-color: #ff6a00aa;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(gaussian, #ff6a0044, 28, 0.24, 0, 0);
+}
+
+.role-card:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ff6a00, #5a2600);
+    -fx-text-fill: #111111;
+    -fx-effect: dropshadow(gaussian, #ff6a00cc, 30, 0.35, 0, 0);
+}
+
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 34px;
+    -fx-effect: dropshadow(gaussian, #ff6a0088, 16, 0.35, 0, 0);
+}
+
+.hero-title {
+    -fx-text-fill: white;
+    -fx-font-size: 58px;
+}
+
+.panel-card,
+.data-row {
+    -fx-padding: 18px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #222222f5, #0a0a0aeb);
+    -fx-border-color: #ff6a0099;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, #ff6a0038, 24, 0.2, 0, 0);
+}
+
+.data-row {
+    -fx-alignment: center-left;
+}
+
+.eyebrow {
+    -fx-text-fill: -ficsit-orange;
+    -fx-font-size: 12px;
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+}
+
+.card-title-small {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+}
+
+.stat-number {
+    -fx-text-fill: -ficsit-orange;
+    -fx-font-size: 48px;
+}
+
+.label {
+    -fx-text-fill: -light-steel;
+}
+
+.button,
+.combo-box,
+.text-field,
+.text-area,
+.spinner {
+    -fx-background-color: #00000061;
+    -fx-text-fill: white;
+    -fx-border-color: #ff6a0073;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.button:hover,
+.primary-button:hover,
+.nav-button:hover {
+    -fx-effect: dropshadow(gaussian, #ff6a00bf, 18, 0.35, 0, 0);
+    -fx-border-color: -ficsit-orange;
+}
+
+.nav-button {
+    -fx-min-height: 46px;
+    -fx-alignment: center-left;
+    -fx-background-color: -steel;
+    -fx-text-fill: white;
+    -fx-border-color: #ff6a0059;
+}
+
+.primary-button {
+    -fx-background-color: -ficsit-orange;
+    -fx-text-fill: #111111;
+    -fx-font-weight: bold;
+}
+
+.danger-button {
+    -fx-background-color: #441319;
+    -fx-text-fill: white;
+    -fx-border-color: #ff334e;
+}
+
+.table-seat {
+    -fx-min-width: 86px;
+    -fx-min-height: 74px;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.table-seat.free {
+    -fx-background-color: #19d46b2e;
+    -fx-border-color: #19d46b;
+}
+
+.table-seat.occupied {
+    -fx-background-color: #ff334e2e;
+    -fx-border-color: #ff334e;
+}
+
+.table-seat.reserved {
+    -fx-background-color: #ff6a002e;
+    -fx-border-color: -ficsit-orange;
+}
+
+.table-seat.selected {
+    -fx-background-color: #2f7dff61;
+    -fx-border-color: #2f7dff;
+    -fx-effect: dropshadow(gaussian, #2f7dffdd, 22, 0.35, 0, 0);
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.tab {
+    -fx-background-color: -steel;
+    -fx-border-color: #ff6a0059;
+}
+
+.tab:selected {
+    -fx-background-color: -ficsit-orange;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #111111;
+}
+
+.scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}

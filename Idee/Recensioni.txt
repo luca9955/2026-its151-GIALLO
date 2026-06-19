@@ -1,0 +1,11 @@
+LATO CLIENT:
+
+L'utente potrà lasciare una recensione solo dopo aver prenotato almeno un tavolo (Volendo si potrebbe fare che l'utente 
+possa lasciare UNA recensione dopo OGNI prenotazione confermata)
+
+La recensione comprenderà:
+- Nome dell'utente (altrimenti anonimo) (opzionale)
+- Stelle (da 1 a 5)
+- Risposte(altri utenti o admin, potranno rispondere ai commenti) (opzionale)
+- Like/Dislike(opzionale)
+- Commento(descrizione della recensione)

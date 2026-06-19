@@ -1,0 +1,11 @@
+LATO CLIENT:
+
+La pagina delle prenotazioni conterrà una "mappa virtuale" che avrà le sagome dei tavoli, dirà il numero di posti 
+disponibili in quel tavolo, se il tavolo disponibile (o magari da che ora sarà disponibile). Un utente non potrà
+prenotare più di un tavolo alla volta.
+
+
+LATO ADMIN:
+
+Possibilità di accettare/rifiutare la prenotazione, Lettura dell'orario di prenotazione
+(da che ora a che ora il tavolo è stato prenotato), Numero del tavolo prenotato, Numero di partecipanti alla prenotazione

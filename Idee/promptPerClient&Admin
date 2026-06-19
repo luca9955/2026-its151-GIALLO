@@ -1,0 +1,693 @@
+AGISCI COME UN SENIOR FULL STACK DEVELOPER SPECIALIZZATO IN HTML5, CSS3 E JAVASCRIPT VANILLA ES6.
+
+Devi progettare e generare un sistema completo per un ristorante a tema SATISFACTORY e FICSIT composto da:
+
+1. AREA CLIENTE
+2. AREA ADMIN
+3. LAYER DATI CONDIVISO
+
+L'obiettivo è che tutte le operazioni effettuate nell'area cliente siano immediatamente visibili nell'area admin.
+
+---
+
+## ARCHITETTURA OBBLIGATORIA
+
+L'applicazione deve essere organizzata in modo modulare.
+
+Creare una cartella:
+
+/data
+
+contenente:
+
+=== storage.js ===
+
+Questo file deve gestire l'intera persistenza dati dell'applicazione.
+
+Utilizzare LocalStorage come database simulato.
+
+Implementare funzioni centralizzate:
+
+* getMenu()
+* saveMenu()
+* getReservations()
+* saveReservations()
+* getOrders()
+* saveOrders()
+* getReviews()
+* saveReviews()
+* getDashboardStats()
+* initializeDatabase()
+
+Tutte le pagine CLIENT e ADMIN devono utilizzare ESCLUSIVAMENTE queste funzioni.
+
+Nessuna pagina deve accedere direttamente al LocalStorage.
+
+---
+
+## SINCRONIZZAZIONE DATI
+
+Quando un utente:
+
+* effettua una prenotazione
+* invia una recensione
+* crea un ordine
+
+i dati devono essere salvati nello storage condiviso.
+
+L'area ADMIN deve leggere gli stessi dati.
+
+Ogni modifica effettuata dall'admin deve aggiornare immediatamente il database simulato.
+
+Utilizzare obbligatoriamente:
+
+window.addEventListener("storage")
+
+per sincronizzare automaticamente i dati tra più tab aperte.
+
+Implementare inoltre un sistema di refresh automatico delle viste senza necessità di ricaricare la pagina.
+
+---
+
+# DESIGN E IDENTITÀ VISIVA
+
+L'intero progetto deve essere ispirato all'universo di SATISFACTORY e FICSIT.
+
+Requisiti grafici:
+
+* Palette colori FICSIT ufficiale
+
+  * Arancione industriale (#FF6A00)
+  * Nero carbone (#111111)
+  * Grigio acciaio (#222222)
+  * Grigio chiaro (#CCCCCC)
+
+* Aspetto industriale futuristico
+
+* Interfacce stile terminale FICSIT
+
+* Bordi illuminati
+
+* Effetti glow arancioni
+
+* Pannelli metallici
+
+* Hover avanzati
+
+* Transizioni fluide
+
+* Effetti particellari CSS
+
+* SVG decorativi personalizzati
+
+---
+
+# FONT SATISFACTORY
+
+TUTTE LE SCRITTE DEL SITO, INCLUSI:
+
+* Titoli
+* Menù
+* Bottoni
+* Tabelle
+* Numeri
+* Dashboard
+* Contatori
+* Stati
+
+devono utilizzare un font identico o estremamente simile a quello utilizzato in SATISFACTORY.
+
+Implementare:
+
+* Font custom tramite @font-face
+* Fallback professionali
+* Uniformità grafica totale
+
+Tutti i numeri devono utilizzare lo stesso font tecnico-industriale del gioco.
+
+---
+
+# IMMAGINI E CONTENUTI VISIVI
+
+L'IA deve aggiungere automaticamente immagini e contenuti grafici coerenti con l'universo SATISFACTORY.
+
+Inserire:
+
+* Background industriali futuristici
+* Fabbriche FICSIT
+* Nastri trasportatori
+* Macchinari industriali
+* Hub FICSIT
+* Strutture modulari
+* Paesaggi alieni tipici di SATISFACTORY
+* Elementi tecnologici e sci-fi
+
+Le immagini devono essere:
+
+* Responsive
+* Ottimizzate
+* Lazy loaded
+* Con overlay scuri
+* Integrate armoniosamente nel design
+
+Prevedere una cartella:
+
+/assets/images
+
+e utilizzare immagini placeholder descrivendo esattamente quale immagine SATISFACTORY-style dovrà essere inserita.
+
+---
+
+## AREA CLIENTE
+
+Generare:
+
+* home.html
+* menu.html
+* prenotazione.html
+* ordinazione.html
+* recensioni.html
+* contatti.html
+
+Ogni pagina deve avere:
+
+* design FICSIT
+* responsive
+* animazioni
+* accessibilità WCAG
+* SEO base
+* meta tag completi
+
+---
+
+# PRENOTAZIONE TAVOLI INTERATTIVA 3D AVANZATA
+
+La pagina `prenotazione.html` deve includere una planimetria tridimensionale interattiva del ristorante ispirata ai sistemi di gestione industriale FICSIT presenti nell'universo SATISFACTORY.
+
+## IMPORTANTE
+
+NON utilizzare una semplice griglia 2D.
+
+NON rappresentare i tavoli come semplici quadrati o pulsanti.
+
+NON utilizzare select, checkbox o layout tabellari tradizionali.
+
+La disposizione logica dei tavoli può essere 4x4 oppure 5x5, ma la visualizzazione deve essere renderizzata in pseudo-3D.
+
+---
+
+## TECNOLOGIE OBBLIGATORIE
+
+Utilizzare esclusivamente:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+Vietato utilizzare:
+
+* Three.js
+* Babylon.js
+* React Three Fiber
+* librerie WebGL esterne
+
+La simulazione tridimensionale deve essere realizzata tramite:
+
+* CSS Perspective
+* Transform3D
+* RotateX
+* RotateY
+* RotateZ
+* TranslateZ
+* Scale3D
+* Ombre dinamiche
+* Effetti luce CSS
+
+---
+
+## PLANIMETRIA 3D
+
+La sala deve apparire come una vera mappa tridimensionale osservata dall'alto con visuale isometrica.
+
+Esempio concettuale:
+
+```
+               T1
+        T2            T3
+
+   T4       T5     T6      T7
+
+T8      T9     T10     T11
+
+   T12    T13    T14
+
+         T15   T16
+```
+
+oppure una configurazione equivalente 5x5.
+
+L'utente deve avere la percezione di osservare una vera sala ristorante e non una tabella HTML.
+
+---
+
+## RENDERING DEI TAVOLI
+
+Ogni tavolo deve essere un oggetto pseudo-3D composto da:
+
+* Piano superiore
+* Spessore
+* Lato frontale
+* Lato laterale
+* Riflessi metallici
+* Ombra proiettata
+
+Utilizzare:
+
+* div annidati
+* pseudo-elementi ::before
+* pseudo-elementi ::after
+* transform-style: preserve-3d
+
+Ogni tavolo deve apparire simile ad un modello industriale FICSIT.
+
+---
+
+## VISUALE FICSIT INDUSTRIALE
+
+I tavoli devono avere:
+
+* Struttura metallica
+* Texture acciaio
+* Bordi illuminati
+* Glow arancione FICSIT
+* Effetti energetici
+* Indicatori LED
+
+Palette obbligatoria:
+
+* Arancione FICSIT #FF6A00
+* Nero carbone #111111
+* Grigio acciaio #222222
+* Grigio chiaro #CCCCCC
+
+---
+
+## SISTEMA TELECAMERA
+
+L'intera sala deve utilizzare una visuale pseudo-isometrica.
+
+Applicare:
+
+perspective: 1800px
+
+transform:
+rotateX(60deg)
+rotateZ(-45deg)
+
+L'effetto finale deve ricordare una console gestionale futuristica FICSIT.
+
+---
+
+## STATI DEI TAVOLI
+
+### LIBERO
+
+Colore:
+
+Verde industriale
+
+Effetti:
+
+* glow verde leggero
+* illuminazione minima
+
+---
+
+### OCCUPATO
+
+Colore:
+
+Rosso intenso
+
+Effetti:
+
+* glow rosso
+* segnalazione di utilizzo
+
+---
+
+### PRENOTATO
+
+Colore:
+
+Arancione FICSIT
+
+Effetti:
+
+* glow pulsante
+* evidenziazione industriale
+
+---
+
+### SELEZIONATO
+
+Colore:
+
+Blu elettrico
+
+Effetti:
+
+* bordo luminoso animato
+* scanner effect
+* pulse continuo
+
+---
+
+## INTERAZIONI
+
+### Hover
+
+Quando il mouse passa sopra un tavolo:
+
+* sollevamento verticale
+* aumento glow
+* ombra dinamica
+* lieve rotazione
+
+---
+
+### Click
+
+Quando un tavolo viene selezionato:
+
+* animazione scanner FICSIT
+* effetto conferma
+* cambio stato immediato
+* aggiornamento storage condiviso
+
+---
+
+### Focus Tastiera
+
+Ogni tavolo deve essere:
+
+* navigabile con TAB
+* attivabile con ENTER
+* attivabile con SPACE
+
+---
+
+## TOOLTIP INDUSTRIALE
+
+Al passaggio del mouse visualizzare:
+
+* Numero tavolo
+* Stato corrente
+* Numero posti
+* Prenotazioni associate
+* Disponibilità
+
+Il tooltip deve avere stile terminale FICSIT.
+
+---
+
+## AMBIENTE 3D COMPLETO
+
+La sala deve includere:
+
+* Pavimento metallico industriale
+* Griglie tecniche
+* Luci LED arancioni
+* Segnaletica FICSIT
+* Pannelli energetici
+* Effetti particellari CSS
+* Neon industriali
+* Indicatori di percorso
+
+L'ambiente deve sembrare una sezione operativa di una fabbrica SATISFACTORY convertita in ristorante.
+
+---
+
+## SINCRONIZZAZIONE IN TEMPO REALE
+
+Quando un tavolo viene prenotato:
+
+* aggiornare il database condiviso
+* aggiornare automaticamente la planimetria cliente
+* aggiornare automaticamente la dashboard admin
+* aggiornare automaticamente tutte le schede aperte
+
+Utilizzare obbligatoriamente:
+
+window.addEventListener("storage")
+
+e un sistema di rendering reattivo senza ricaricare la pagina.
+
+---
+
+## RISULTATO FINALE RICHIESTO
+
+La planimetria deve sembrare una vera sala tridimensionale FICSIT osservata in prospettiva isometrica, con tavoli industriali pseudo-3D completamente interattivi, animati e sincronizzati in tempo reale con il database condiviso.
+
+La percezione visiva finale deve essere quella di un videogioco gestionale futuristico e non di una classica applicazione web con una griglia di pulsanti.
+
+
+## PRENOTAZIONI CLIENTE
+
+Form prenotazione con:
+
+* Nome
+* Cognome
+* Telefono
+* Email
+* Numero persone
+* Data
+* Ora
+* Tavolo selezionato dalla mappa
+
+Alla conferma:
+
+* generare ID univoco
+* salvare nello storage condiviso
+
+Stato iniziale:
+
+"In attesa"
+
+---
+
+## ORDINAZIONI CLIENTE
+
+Permettere al cliente di:
+
+* selezionare piatti
+* modificare quantità
+* visualizzare totale
+
+Alla conferma:
+
+* generare ordine
+* salvare nello storage condiviso
+
+Stato iniziale:
+
+"Ricevuto"
+
+---
+
+## RECENSIONI CLIENTE
+
+Form recensione:
+
+* Nome
+* Stelle
+* Commento
+
+Salvare nello storage condiviso.
+
+Implementare:
+
+* rating a stelle animato
+* preview recensione
+* validazione form
+
+---
+
+## AREA ADMIN
+
+Generare:
+
+* principale.html
+* principale.css
+* principale.js
+
+Dashboard con iframe.
+
+Menu laterale:
+
+* Dashboard
+* Gestione Menù
+* Prenotazioni
+* Ordinazioni
+* Recensioni
+* Logout
+
+Design stile terminale FICSIT.
+
+---
+
+## GESTIONE PRENOTAZIONI ADMIN
+
+Visualizzare tutte le prenotazioni provenienti dall'area cliente.
+
+Funzioni:
+
+* Cerca
+* Filtra
+* Modifica
+
+Cambio stato:
+
+* In attesa
+* Approvata
+* Rifiutata
+
+Visualizzare inoltre:
+
+* Tavolo assegnato
+* Data
+* Ora
+* Cliente
+
+Le modifiche devono aggiornare immediatamente il database condiviso.
+
+---
+
+## GESTIONE ORDINI ADMIN
+
+Visualizzare tutti gli ordini provenienti dall'area cliente.
+
+Cambio stato:
+
+* Ricevuto
+* Accettato
+* In preparazione
+* Pronto
+* Consegnato
+
+Salvataggio automatico.
+
+---
+
+## GESTIONE RECENSIONI ADMIN
+
+Visualizzare tutte le recensioni provenienti dall'area cliente.
+
+Funzioni:
+
+* Ricerca
+* Filtra
+* Elimina
+
+---
+
+## GESTIONE MENU ADMIN
+
+CRUD completo.
+
+Campi:
+
+* Nome piatto
+* Categoria
+* Descrizione
+* Prezzo
+* Immagine
+* Disponibilità
+
+Le modifiche al menù devono essere immediatamente visibili nell'area cliente.
+
+---
+
+## DASHBOARD ADMIN
+
+Statistiche calcolate leggendo i dati reali presenti nello storage condiviso:
+
+* Prenotazioni oggi
+* Ordini attivi
+* Numero recensioni
+* Incasso giornaliero
+
+Utilizzare:
+
+* SVG puri
+* Grafici SVG
+* Indicatori animati
+* Progress ring SVG
+
+Nessuna libreria esterna.
+
+---
+
+## REQUISITI TECNICI
+
+NON UTILIZZARE:
+
+* Bootstrap
+* Tailwind
+* React
+* Vue
+* Angular
+* jQuery
+
+UTILIZZARE SOLO:
+
+* HTML5
+* CSS3
+* JavaScript Vanilla ES6
+
+---
+
+## QUALITÀ DEL CODICE
+
+TUTTO IL CODICE DEVE ESSERE:
+
+* Modulabile
+* Scalabile
+* Commentato
+* Professionale
+* Responsive
+* Accessibile
+* Ottimizzato
+
+Utilizzare:
+
+* ES Modules
+* Event Delegation
+* Template literals
+* Componentizzazione JS
+* CSS Variables
+* BEM Naming Convention
+
+---
+
+## OUTPUT OBBLIGATORIO
+
+Generare ogni file separatamente nel formato:
+
+=== nomefile ===
+
+[codice completo]
+
+senza omettere alcuna parte del codice.
+
+NON usare placeholder del tipo:
+
+"continua..."
+
+"ecc."
+
+"codice omesso"
+
+Ogni file deve essere completo e funzionante.
+
+Ogni pagina deve importare storage.js e utilizzare esclusivamente il layer dati condiviso.

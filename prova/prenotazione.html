@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Prenota un tavolo nella planimetria interattiva FICSIT.">
+  <meta name="theme-color" content="#ff6a00">
+  <title>FICSIT Canteen | Prenotazione</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/client.js"></script>
+</head>
+<body data-page="prenotazione">
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+  <header class="site-header"><nav class="nav" aria-label="Navigazione principale"><a class="brand" href="home.html"><span class="brand__mark">F</span>FICSIT Canteen</a><div class="nav__links"><a href="home.html">Home</a><a href="menu.html">Menu</a><a href="ordinazione.html">Ordina</a><a href="recensioni.html">Recensioni</a><a href="contatti.html">Contatti</a><a href="admin/principale.html">Admin</a></div></nav></header>
+  <main id="main" class="main">
+    <section class="section">
+      <span class="eyebrow">Table Allocator</span>
+      <h1>Prenotazione</h1>
+      <div class="grid">
+        <section class="panel" aria-labelledby="mapTitle">
+          <h2 id="mapTitle">Planimetria 4 x 4</h2>
+          <div id="tableMap" class="table-map" aria-live="polite"></div>
+          <p>Verde libero, rosso occupato, arancione prenotato, blu selezionato.</p>
+        </section>
+        <form id="reservationForm" class="form" aria-describedby="reservationNotice">
+          <div class="form__grid">
+            <label>Nome<input name="firstName" autocomplete="given-name" required></label>
+            <label>Cognome<input name="lastName" autocomplete="family-name" required></label>
+            <label>Telefono<input name="phone" type="tel" autocomplete="tel" required></label>
+            <label>Email<input name="email" type="email" autocomplete="email" required></label>
+            <label>Persone<input name="people" type="number" min="1" max="12" required></label>
+            <label>Data<input name="date" type="date" required></label>
+            <label>Ora<input name="time" type="time" required></label>
+            <label>Tavolo selezionato<input id="selectedTable" readonly required></label>
+          </div>
+          <button type="submit">Conferma prenotazione</button>
+          <p id="reservationNotice" class="notice" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">Le prenotazioni entrano nello stesso storage dell'admin.</footer>
+</body>
+</html>
