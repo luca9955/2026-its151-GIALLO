@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Prenotazione tavoli con planimetria operativa FICSIT sincronizzata in tempo reale.">
+    <meta name="theme-color" content="#ff6a00">
+    <title>Prenotazione Tavoli | FICSIT Restaurant OS</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body data-page="booking" style="--hero-image: url('assets/images/booking-network.svg')">
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="home.html"><span class="brand__mark">F</span><span>FICSIT RESTAURANT<span class="brand__sub">Table control room</span></span></a>
+        <nav class="nav" aria-label="Navigazione cliente">
+          <a class="nav__link" href="home.html">Home</a>
+          <a class="nav__link" href="menu.html">Menu</a>
+          <a class="nav__link" href="ordinazione.html">Ordina</a>
+          <a class="nav__link" href="recensioni.html">Recensioni</a>
+          <a class="nav__link" href="contatti.html">Contatti</a>
+          <a class="nav__link" href="principale.html">Admin</a>
+        </nav>
+      </header>
+      <main>
+        <section class="hero">
+          <div class="hero__content">
+            <p class="eyebrow">Table planning center</p>
+            <h1>Prenota il tavolo</h1>
+            <p class="lead">Scegli un tavolo dalla planimetria della sala, controlla subito capienza e disponibilita, poi conferma la richiesta. La prenotazione resta sincronizzata con dashboard e area admin.</p>
+          </div>
+        </section>
+        <section class="section booking-layout" aria-labelledby="booking-title">
+          <div class="panel factory-stage">
+            <div class="seating-header">
+              <div>
+                <p class="eyebrow">Sala operativa</p>
+                <h2>Planimetria tavoli</h2>
+              </div>
+              <div class="map-hud" aria-label="Legenda stati tavolo">
+                <span class="map-hud__chip map-hud__chip--free">Libero</span>
+                <span class="map-hud__chip map-hud__chip--reserved">Prenotato</span>
+                <span class="map-hud__chip map-hud__chip--busy">Occupato</span>
+                <span class="map-hud__chip map-hud__chip--selected">Selezionato</span>
+              </div>
+            </div>
+            <div class="booking-stats" id="bookingStats" aria-live="polite"></div>
+            <div class="reservation-map" aria-label="Planimetria tavoli della sala">
+              <div class="floor-shell">
+                <span class="floor-marker floor-marker--entrance">Ingresso</span>
+                <span class="floor-marker floor-marker--kitchen">Cucina</span>
+                <div class="map-floor" id="mapFloor"></div>
+              </div>
+            </div>
+            <div class="map-readout">
+              <strong>Selezione rapida</strong>
+              <span>Click o TAB + INVIO per agganciare un tavolo al modulo prenotazione</span>
+            </div>
+            <div class="tooltip" id="tableTooltip" role="tooltip"></div>
+          </div>
+
+          <aside class="form-panel" aria-labelledby="booking-title">
+            <p class="eyebrow">Resource request</p>
+            <h2 id="booking-title">Prenotazione</h2>
+            <div class="selected-card" aria-live="polite">
+              <span class="selected-card__kicker">Tavolo selezionato</span>
+              <strong id="selectedTable">NESSUN TAVOLO</strong>
+              <dl>
+                <div><dt>Stato</dt><dd id="selectedState">In attesa</dd></div>
+                <div><dt>Capienza</dt><dd id="selectedCapacity">-</dd></div>
+                <div><dt>Prenotazioni</dt><dd id="selectedReservations">-</dd></div>
+              </dl>
+            </div>
+            <div class="terminal-log" id="reservationLog" aria-live="polite">
+              <span>SYSTEM READY</span>
+              <span>SELECT TABLE</span>
+              <span>AWAITING REQUEST</span>
+            </div>
+            <form id="reservationForm" class="form-grid">
+              <div class="field"><label for="firstName">Nome</label><input id="firstName" name="firstName" autocomplete="given-name" required></div>
+              <div class="field"><label for="lastName">Cognome</label><input id="lastName" name="lastName" autocomplete="family-name" required></div>
+              <div class="field"><label for="phone">Telefono</label><input id="phone" name="phone" autocomplete="tel" required></div>
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="persons">Persone</label><input id="persons" name="persons" type="number" min="1" max="12" required></div>
+              <div class="field"><label for="date">Data</label><input id="date" name="date" type="date" required></div>
+              <div class="field field--full"><label for="time">Ora</label><input id="time" name="time" type="time" required></div>
+              <button class="button button--solid field--full" type="submit">Conferma allocazione</button>
+            </form>
+          </aside>
+        </section>
+      </main>
+      <footer class="footer">La sala usa una planimetria responsive con stati sincronizzati in tempo reale.</footer>
+    </div>
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>

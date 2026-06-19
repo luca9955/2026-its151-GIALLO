@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Menu FICSIT Restaurant con piatti presentati come moduli industriali premium.">
+    <meta name="theme-color" content="#ff6a00">
+    <title>Menu | FICSIT Restaurant OS</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body data-page="menu" class="menu-page" style="--hero-image: url('assets/images/generated-burger.png')">
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="home.html"><span class="brand__mark">F</span><span>FICSIT RESTAURANT<span class="brand__sub">Menu production line</span></span></a>
+        <nav class="nav" aria-label="Navigazione cliente">
+          <a class="nav__link" href="home.html">Home</a>
+          <a class="nav__link" href="prenotazione.html">Prenota</a>
+          <a class="nav__link" href="ordinazione.html">Ordina</a>
+          <a class="nav__link" href="recensioni.html">Recensioni</a>
+          <a class="nav__link" href="contatti.html">Contatti</a>
+          <a class="nav__link" href="principale.html">Admin</a>
+        </nav>
+      </header>
+      <main>
+        <section class="hero menu-hero">
+          <div class="hero__content">
+            <p class="eyebrow">Nutritional assembly</p>
+            <h1>Menu operativo</h1>
+            <p class="lead">Scegli il tuo modulo culinario tra burger, proteine, piatti caldi e dessert. Le immagini e la disponibilita sono sincronizzate con la gestione admin.</p>
+            <div class="home-actions" aria-label="Azioni menu">
+              <a class="button button--solid" href="ordinazione.html">Ordina adesso</a>
+              <a class="button" href="prenotazione.html">Prenota un tavolo</a>
+            </div>
+          </div>
+        </section>
+        <section class="section menu-section" aria-labelledby="menu-title">
+          <div class="section__head">
+            <div>
+              <p class="eyebrow">Inventory synced</p>
+              <h2 id="menu-title">Catalogo operativo</h2>
+            </div>
+            <span class="menu-count" id="menuCount" aria-live="polite">0 piatti</span>
+          </div>
+          <div class="menu-toolbar" aria-label="Strumenti menu">
+            <div class="field menu-search">
+              <label for="menuSearch">Cerca nel menu</label>
+              <input id="menuSearch" type="search" placeholder="Nome, categoria o ingrediente">
+            </div>
+            <div class="menu-filters" id="menuFilters" aria-label="Categorie menu"></div>
+          </div>
+          <div class="menu-list menu-catalog" id="menuList"></div>
+        </section>
+      </main>
+      <footer class="footer">Aggiornamenti menu sincronizzati dall'area admin.</footer>
+    </div>
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>

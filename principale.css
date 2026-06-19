@@ -1,0 +1,133 @@
+.admin-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .96), rgba(0, 0, 0, .7)),
+    url("assets/images/generated-admin-control.png") center / cover fixed;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(255, 106, 0, .12), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, .04), transparent),
+    rgba(8, 8, 8, .96);
+  border-right: 1px solid rgba(255, 106, 0, .38);
+  box-shadow: 18px 0 70px rgba(0, 0, 0, .45);
+}
+
+.admin-nav {
+  display: grid;
+  gap: .65rem;
+}
+
+.admin-nav__button {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: .75rem .9rem;
+  border: 1px solid rgba(255, 106, 0, .35);
+  background:
+    linear-gradient(90deg, rgba(255, 106, 0, .12), transparent),
+    rgba(34, 34, 34, .84);
+  color: var(--light);
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.admin-nav__button:hover,
+.admin-nav__button:focus-visible,
+.admin-nav__button.is-active {
+  outline: none;
+  transform: translateX(4px);
+  border-color: var(--orange);
+  box-shadow: 0 0 24px rgba(255, 106, 0, .2);
+}
+
+.admin-nav__button.is-active {
+  color: #111;
+  background: var(--orange);
+  font-weight: 900;
+}
+
+.admin-main {
+  min-width: 0;
+  padding: 1rem;
+}
+
+.admin-header {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 116px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 106, 0, .38);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .88), rgba(0, 0, 0, .48)),
+    url("assets/images/generated-admin-control.png") center / cover;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, .38);
+}
+
+.admin-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 106, 0, .65) 0 10%, transparent 10% 100%) top / 100% 3px no-repeat,
+    repeating-linear-gradient(135deg, rgba(255, 106, 0, .38) 0 8px, transparent 8px 16px) right top / 92px 22px no-repeat;
+  pointer-events: none;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+}
+
+.admin-status {
+  position: relative;
+  z-index: 1;
+  color: var(--green);
+  border: 1px solid rgba(60, 255, 130, .4);
+  padding: .55rem .8rem;
+  background: rgba(0, 0, 0, .55);
+  box-shadow: 0 0 18px rgba(60, 255, 130, .12);
+}
+
+.admin-frame {
+  display: block;
+  width: 100%;
+  min-height: calc(100vh - 150px);
+  border: 1px solid rgba(255, 106, 0, .38);
+  border-radius: 8px;
+  background: #080808;
+}
+
+@media (max-width: 900px) {
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    height: auto;
+  }
+
+  .admin-nav {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}

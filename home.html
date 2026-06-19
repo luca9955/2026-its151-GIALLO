@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="FICSIT Restaurant OS: esperienza cliente industriale ispirata a sistemi logistici futuristici.">
+    <meta name="theme-color" content="#ff6a00">
+    <meta property="og:title" content="FICSIT Restaurant OS">
+    <meta property="og:description" content="Prenota, ordina e invia feedback dentro un terminale industriale.">
+    <meta property="og:type" content="website">
+    <title>FICSIT Restaurant OS | Home</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body data-page="home" class="home-page" style="--hero-image: url('assets/images/generated-burger.png')">
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="home.html" aria-label="FICSIT Restaurant OS home">
+          <span class="brand__mark">F</span>
+          <span>BONOBO EXPRESS<span class="brand__sub">Operations dining system</span></span>
+        </a>
+        <nav class="nav" aria-label="Navigazione cliente">
+          <a class="nav__link" href="menu.html">Menu</a>
+          <a class="nav__link" href="prenotazione.html">Prenota</a>
+          <a class="nav__link" href="ordinazione.html">Ordina</a>
+          <a class="nav__link" href="recensioni.html">Recensioni</a>
+          <a class="nav__link" href="contatti.html">Contatti</a>
+          <a class="nav__link" href="principale.html">Admin</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero home-hero">
+          <div class="hero__content home-hero__content">
+            <p class="eyebrow">Industrial dining experience</p>
+            <h1>BONOBO Express</h1>
+            <p class="lead">Burger d'officina, piatti assemblati al millimetro e servizio sincronizzato come una linea produttiva. Scegli il tavolo, ordina dal menu e lascia che la cucina metta in moto il resto.</p>
+            <div class="home-actions" aria-label="Azioni principali">
+              <a class="button button--solid" href="prenotazione.html">Prenota un tavolo</a>
+              <a class="button" href="menu.html">Sfoglia il menu</a>
+            </div>
+            <div class="home-signal" aria-label="Stato servizio cliente">
+              <span>Linea cucina attiva</span>
+              <span>Tavoli sincronizzati</span>
+              <span>Ordini in tempo reale</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--dense" aria-labelledby="stats-title">
+          <div class="section__head">
+            <div>
+              <p class="eyebrow">Service board</p>
+              <h2 id="stats-title">Sala in movimento</h2>
+            </div>
+          </div>
+          <div class="home-service-grid">
+            <article class="panel stat home-stat"><span>Prenotazioni oggi</span><strong class="stat__value" data-stat="reservationsToday">0</strong><small>Postazioni gia assegnate</small></article>
+            <article class="panel stat home-stat"><span>Ordini attivi</span><strong class="stat__value" data-stat="activeOrders">0</strong><small>Moduli in preparazione</small></article>
+            <article class="panel stat home-stat"><span>Piatti disponibili</span><strong class="stat__value" data-home-stat="menuCount">0</strong><small>Ricette pronte in catalogo</small></article>
+            <article class="panel stat home-stat"><span>Feedback ricevuti</span><strong class="stat__value" data-stat="reviewCount">0</strong><small>Segnali dalla sala</small></article>
+          </div>
+        </section>
+
+        <section class="section home-paths" aria-labelledby="paths-title">
+          <div class="section__head">
+            <div>
+              <p class="eyebrow">Percorsi rapidi</p>
+              <h2 id="paths-title">Cosa vuoi fare?</h2>
+            </div>
+          </div>
+          <div class="grid">
+            <a class="panel home-path" href="prenotazione.html">
+              <span>01</span>
+              <h3>Prenota</h3>
+              <p>Scegli il tavolo dalla planimetria e invia la richiesta alla sala.</p>
+            </a>
+            <a class="panel home-path" href="ordinazione.html">
+              <span>02</span>
+              <h3>Ordina</h3>
+              <p>Componi il tuo ordine dal catalogo operativo dei piatti.</p>
+            </a>
+            <a class="panel home-path" href="recensioni.html">
+              <span>03</span>
+              <h3>Recensisci</h3>
+              <p>Lascia un feedback sulla tua esperienza nel sistema.</p>
+            </a>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="menu-preview-title">
+          <div class="section__head">
+            <div>
+              <p class="eyebrow">Production line</p>
+              <h2 id="menu-preview-title">Moduli culinari</h2>
+            </div>
+            <a class="button" href="menu.html">Catalogo completo</a>
+          </div>
+          <div class="grid" id="menuPreview"></div>
+        </section>
+      </main>
+
+      <footer class="footer">FICSIT Restaurant OS - Database locale condiviso e pronto per migrazione MariaDB.</footer>
+    </div>
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>

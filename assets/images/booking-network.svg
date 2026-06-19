@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Industrial logistics routing network</title>
+  <desc id="desc">An original isometric orange sci-fi routing network used behind the reservation interface.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#050505"/>
+      <stop offset=".6" stop-color="#151515"/>
+      <stop offset="1" stop-color="#261304"/>
+    </linearGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="floor" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="skewX(-24)">
+      <path d="M0 0H80V80H0Z" fill="none" stroke="#cccccc" stroke-opacity=".05"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#floor)"/>
+  <g transform="translate(800 470) rotate(-32) scale(1 .58)" fill="none" stroke="#ff6a00" stroke-width="18" stroke-linecap="round" filter="url(#softGlow)">
+    <path d="M0 0H-460V-210"/>
+    <path d="M0 0H460V-210"/>
+    <path d="M0 0H-430V220"/>
+    <path d="M0 0H430V220"/>
+    <path d="M0 0V-320"/>
+    <path d="M0 0V320"/>
+    <circle cx="0" cy="0" r="86" fill="#111" stroke="#ff6a00"/>
+    <circle cx="-460" cy="-210" r="46" fill="#222"/>
+    <circle cx="460" cy="-210" r="46" fill="#222"/>
+    <circle cx="-430" cy="220" r="46" fill="#222"/>
+    <circle cx="430" cy="220" r="46" fill="#222"/>
+    <circle cx="0" cy="-320" r="46" fill="#222"/>
+    <circle cx="0" cy="320" r="46" fill="#222"/>
+  </g>
+  <g fill="#00a3ff" opacity=".55">
+    <circle cx="515" cy="355" r="8"><animate attributeName="opacity" values=".1;1;.1" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="1010" cy="355" r="8"><animate attributeName="opacity" values="1;.1;1" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="790" cy="215" r="8"><animate attributeName="opacity" values=".1;1;.1" dur="3s" repeatCount="indefinite"/></circle>
+  </g>
+  <rect width="1600" height="900" fill="#000" opacity=".38"/>
+</svg>
