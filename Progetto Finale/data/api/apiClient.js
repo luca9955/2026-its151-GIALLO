@@ -2,10 +2,14 @@ import { DATABASE_MODE } from "../database-config.js";
 
 const API_BASE_URL = "/api";
 
-export async function requestJson(endpoint, options = {}) {
+function ensureMariaDbMode() {
   if (DATABASE_MODE !== "MARIADB") {
-    throw new Error("apiClient e riservato alla modalita MARIADB futura.");
+    throw new Error("apiClient e riservato alla modalita MARIADB.");
   }
+}
+
+export async function requestJson(endpoint, options = {}) {
+  ensureMariaDbMode();
 
   /*
   FUTURA IMPLEMENTAZIONE:
@@ -24,4 +28,22 @@ export async function requestJson(endpoint, options = {}) {
   }
 
   return response.json();
+}
+
+export function requestJsonSync(endpoint, options = {}) {
+  ensureMariaDbMode();
+
+  const method = options.method || "GET";
+  const xhr = new XMLHttpRequest();
+  xhr.open(method, `${API_BASE_URL}${endpoint}`, false);
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  const body = options.body ? options.body : null;
+  xhr.send(body);
+
+  if (xhr.status < 200 || xhr.status >= 300) {
+    throw new Error(`Errore API ${xhr.status}: ${endpoint}`);
+  }
+
+  return xhr.responseText ? JSON.parse(xhr.responseText) : null;
 }

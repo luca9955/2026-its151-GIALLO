@@ -1,4 +1,5 @@
 import { DATABASE_MODE } from "./database-config.js";
+import { requestJsonSync } from "./api/apiClient.js";
 
 const DB_KEY = "ficsitRestaurantDatabase";
 const DB_VERSION = 1;
@@ -72,6 +73,10 @@ function clone(value) {
 }
 
 function readDatabase() {
+  if (DATABASE_MODE === "MARIADB") {
+    return requestJsonSync("/database");
+  }
+
   /*
   ATTUALE IMPLEMENTAZIONE:
   Recupera l'intero database simulato da LocalStorage con chiave unica.
@@ -97,6 +102,20 @@ function readDatabase() {
 }
 
 function writeDatabase(nextDatabase) {
+  if (DATABASE_MODE === "MARIADB") {
+    requestJsonSync("/database", {
+      method: "PUT",
+      body: JSON.stringify({
+        menu: clone(nextDatabase.menu || []),
+        reservations: clone(nextDatabase.reservations || []),
+        orders: clone(nextDatabase.orders || []),
+        reviews: clone(nextDatabase.reviews || []),
+      }),
+    });
+    emitDatabaseUpdate();
+    return;
+  }
+
   /*
   ATTUALE IMPLEMENTAZIONE:
   Serializza l'intero documento JSON dentro LocalStorage.
@@ -166,8 +185,10 @@ export function initializeDatabase() {
   2) Verificare migrazioni schema e versione applicativa.
   3) In caso di sessione scaduta, notificare il livello auth.
   */
-  if (DATABASE_MODE !== "LOCAL") {
-    console.info("Modalita database futura:", DATABASE_MODE);
+  if (DATABASE_MODE === "MARIADB") {
+    requestJsonSync("/health");
+    emitDatabaseUpdate();
+    return;
   }
 
   if (!localStorage.getItem(DB_KEY)) {

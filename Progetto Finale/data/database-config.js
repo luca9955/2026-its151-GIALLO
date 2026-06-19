@@ -1,4 +1,4 @@
-export const DATABASE_MODE = "LOCAL";
+export const DATABASE_MODE = "MARIADB";
 
 /*
 CAMBIO FUTURO:

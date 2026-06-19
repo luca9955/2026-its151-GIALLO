@@ -14,6 +14,12 @@ Importare lo schema:
 SOURCE database/mariadb-schema.sql;
 ```
 
+Se non esiste ancora l'utente applicativo, eseguire prima come utente amministratore MariaDB:
+
+```sql
+SOURCE database/setup-app-user.sql;
+```
+
 ## 3. Creare il backend API
 
 Esporre endpoint REST compatibili:
@@ -28,9 +34,31 @@ Esporre endpoint REST compatibili:
 - `PUT /api/reviews`
 - `GET /api/dashboard/stats`
 
+Implementazione presente nel progetto:
+
+- backend Node/Express in `server/`
+- configurazione MariaDB tramite `.env`
+- frontend statico servito dallo stesso server
+- script di avvio in `package.json`
+
 ## 4. Configurare la connessione
 
 Nel backend impostare host, porta, database, utente, password, pool connessioni, timeout e SSL se richiesto.
+
+Esempio rapido:
+
+```bash
+cp .env.example .env
+npm install
+npm start
+```
+
+Poi aprire:
+
+```text
+http://localhost:3000/home.html
+http://localhost:3000/principale.html
+```
 
 ## 5. Cambiare modalita database
 
@@ -39,6 +67,8 @@ Aggiornare `data/database-config.js`:
 ```js
 export const DATABASE_MODE = "MARIADB";
 ```
+
+Nel progetto questa modifica e gia applicata.
 
 ## 6. Sostituire lo storage engine
 
