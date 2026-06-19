@@ -1,24 +1,36 @@
 import { DATABASE_MODE } from "../database-config.js";
 
-const API_BASE_URL = "/api";
+const endpointMap = {
+  "/health": "api/health.php",
+  "/database": "api/database.php",
+  "/menu": "api/menu.php",
+  "/reservations": "api/reservations.php",
+  "/orders": "api/orders.php",
+  "/reviews": "api/reviews.php",
+  "/dashboard/stats": "api/dashboard-stats.php",
+};
 
-function ensureMariaDbMode() {
-  if (DATABASE_MODE !== "MARIADB") {
-    throw new Error("apiClient e riservato alla modalita MARIADB.");
+function resolveEndpoint(endpoint) {
+  return endpointMap[endpoint] || `api/${endpoint.replace(/^\/+/, "")}.php`;
+}
+
+function ensureXamppMode() {
+  if (DATABASE_MODE !== "XAMPP") {
+    throw new Error("apiClient e riservato alla modalita XAMPP.");
   }
 }
 
 export async function requestJson(endpoint, options = {}) {
-  ensureMariaDbMode();
+  ensureXamppMode();
 
   /*
-  FUTURA IMPLEMENTAZIONE:
+  NOTE:
   - aggiungere token/sessione negli header Authorization
   - gestire timeout con AbortController
-  - normalizzare errori HTTP e payload MariaDB
+  - normalizzare errori HTTP e payload MySQL/PHP
   - ritentare le richieste idempotenti quando il server non risponde
   */
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(resolveEndpoint(endpoint), {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     ...options,
   });
@@ -31,11 +43,11 @@ export async function requestJson(endpoint, options = {}) {
 }
 
 export function requestJsonSync(endpoint, options = {}) {
-  ensureMariaDbMode();
+  ensureXamppMode();
 
   const method = options.method || "GET";
   const xhr = new XMLHttpRequest();
-  xhr.open(method, `${API_BASE_URL}${endpoint}`, false);
+  xhr.open(method, resolveEndpoint(endpoint), false);
   xhr.setRequestHeader("Content-Type", "application/json");
 
   const body = options.body ? options.body : null;

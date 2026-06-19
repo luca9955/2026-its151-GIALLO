@@ -73,7 +73,7 @@ function clone(value) {
 }
 
 function readDatabase() {
-  if (DATABASE_MODE === "MARIADB") {
+  if (DATABASE_MODE === "XAMPP") {
     return requestJsonSync("/database");
   }
 
@@ -81,11 +81,11 @@ function readDatabase() {
   ATTUALE IMPLEMENTAZIONE:
   Recupera l'intero database simulato da LocalStorage con chiave unica.
 
-  MIGRAZIONE FUTURA MARIADB:
+  MODALITA XAMPP:
   1) Sostituire questa lettura con chiamate API mirate tramite apiClient.js.
-  2) Ogni repository potra chiamare endpoint come GET /api/menu o GET /api/orders.
-  3) Il backend dovra tradurre le righe MariaDB nello stesso formato JSON usato dal frontend.
-  4) Gli errori server andranno trasformati in messaggi applicativi coerenti.
+  2) Ogni repository potra chiamare endpoint PHP come menu.php o orders.php.
+  3) PHP dovra tradurre le righe MySQL nello stesso formato JSON usato dal frontend.
+  4) Gli errori lato server andranno trasformati in messaggi applicativi coerenti.
   5) Gestire autenticazione, timeout e retry nel data layer, non nella UI.
   */
   const raw = localStorage.getItem(DB_KEY);
@@ -102,7 +102,7 @@ function readDatabase() {
 }
 
 function writeDatabase(nextDatabase) {
-  if (DATABASE_MODE === "MARIADB") {
+  if (DATABASE_MODE === "XAMPP") {
     requestJsonSync("/database", {
       method: "PUT",
       body: JSON.stringify({
@@ -120,14 +120,14 @@ function writeDatabase(nextDatabase) {
   ATTUALE IMPLEMENTAZIONE:
   Serializza l'intero documento JSON dentro LocalStorage.
 
-  MIGRAZIONE FUTURA MARIADB:
+  MODALITA XAMPP:
   1) Sostituire la scrittura globale con endpoint REST granulari.
   2) Esempi:
-     - PUT /api/menu
-     - PUT /api/reservations
-     - PUT /api/orders
-     - PUT /api/reviews
-  3) Il backend dovra eseguire INSERT, UPDATE o DELETE dentro transazioni SQL.
+     - menu.php
+     - reservations.php
+     - orders.php
+     - reviews.php
+  3) PHP dovra eseguire INSERT, UPDATE o DELETE dentro transazioni SQL.
   4) La UI non dovra cambiare: cambiera solo questo provider.
   */
   localStorage.setItem(DB_KEY, JSON.stringify({ ...nextDatabase, version: DB_VERSION }));
@@ -180,12 +180,12 @@ export function initializeDatabase() {
   ATTUALE IMPLEMENTAZIONE:
   Crea il documento LocalStorage iniziale se non esiste.
 
-  MIGRAZIONE FUTURA MARIADB:
-  1) Sostituire con health-check GET /api/health.
+  MODALITA XAMPP:
+  1) Sostituire con health-check health.php.
   2) Verificare migrazioni schema e versione applicativa.
   3) In caso di sessione scaduta, notificare il livello auth.
   */
-  if (DATABASE_MODE === "MARIADB") {
+  if (DATABASE_MODE === "XAMPP") {
     requestJsonSync("/health");
     emitDatabaseUpdate();
     return;
@@ -200,7 +200,7 @@ export function initializeDatabase() {
   /*
   FUTURO SISTEMA REALTIME:
   Sostituire window.addEventListener("storage") con WebSocket, Server Sent
-  Events o MQTT industriale per sincronizzare client, admin e database server
+  Events o MQTT industriale per sincronizzare client, admin e database
   in tempo reale.
   */
   window.addEventListener("storage", (event) => {
@@ -219,8 +219,8 @@ export function initializeDatabase() {
 
 export function getMenu() {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: GET /api/menu
+  MODALITA XAMPP:
+  Endpoint: menu.php
   Query: SELECT id, name, category, description, price, image, available, created_at, updated_at FROM menu ORDER BY category, name;
   La risposta dovra restare un array di oggetti menu.
   */
@@ -229,10 +229,10 @@ export function getMenu() {
 
 export function saveMenu(menu) {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: PUT /api/menu
+  MODALITA XAMPP:
+  Endpoint: menu.php
   Query: usare transazioni con INSERT ... ON DUPLICATE KEY UPDATE e DELETE per record rimossi.
-  Validare prezzi numerici, disponibilita booleana e permessi admin lato server.
+  Validare prezzi numerici, disponibilita booleana e permessi admin lato PHP.
   */
   const db = readDatabase();
   writeDatabase({ ...db, menu: clone(menu) });
@@ -243,14 +243,14 @@ export function getReservations() {
   ATTUALE IMPLEMENTAZIONE:
   Recupera le prenotazioni da LocalStorage.
 
-  MIGRAZIONE FUTURA MARIADB:
-  1) Endpoint: GET /api/reservations
+  MODALITA XAMPP:
+  1) Endpoint: reservations.php
   2) Query:
      SELECT r.*, u.nome, u.cognome, u.email, u.telefono
      FROM reservations r
      LEFT JOIN users u ON u.id = r.user_id
      ORDER BY r.date DESC, r.time DESC;
-  3) Il backend dovra mantenere la stessa struttura JSON.
+  3) PHP dovra mantenere la stessa struttura JSON.
   4) Gestire errori server e timeout nel repository/data layer.
   */
   return readDatabase().reservations;
@@ -258,8 +258,8 @@ export function getReservations() {
 
 export function saveReservations(reservations) {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: PUT /api/reservations
+  MODALITA XAMPP:
+  Endpoint: reservations.php
   Query: INSERT/UPDATE reservations con transazione su users e tables.
   Sincronizzazione futura: inviare evento WebSocket "reservations:update".
   */
@@ -269,8 +269,8 @@ export function saveReservations(reservations) {
 
 export function getOrders() {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: GET /api/orders
+  MODALITA XAMPP:
+  Endpoint: orders.php
   Query: SELECT id, reservation_id, customer_name, items_json, total, status, created_at FROM orders ORDER BY created_at DESC;
   items_json puo restare JSON o essere normalizzato in order_items.
   */
@@ -279,8 +279,8 @@ export function getOrders() {
 
 export function saveOrders(orders) {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: PUT /api/orders
+  MODALITA XAMPP:
+  Endpoint: orders.php
   Query: transazione su orders e order_items oppure colonna JSON items_json.
   Gestire concorrenza con updated_at o optimistic locking.
   */
@@ -290,18 +290,18 @@ export function saveOrders(orders) {
 
 export function getReviews() {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: GET /api/reviews
+  MODALITA XAMPP:
+  Endpoint: reviews.php
   Query: SELECT id, customer_name, stars, comment, created_at FROM reviews ORDER BY created_at DESC;
-  Moderazione futura e permessi admin vanno gestiti lato backend.
+  Moderazione futura e permessi admin vanno gestiti lato PHP.
   */
   return readDatabase().reviews;
 }
 
 export function saveReviews(reviews) {
   /*
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: PUT /api/reviews
+  MODALITA XAMPP:
+  Endpoint: reviews.php
   Query: INSERT/DELETE reviews con validazione stelle 1-5 e sanitizzazione commenti.
   */
   const db = readDatabase();
@@ -313,14 +313,14 @@ export function getDashboardStats() {
   ATTUALE IMPLEMENTAZIONE:
   Calcola statistiche leggendo gli array LocalStorage gia normalizzati.
 
-  MIGRAZIONE FUTURA MARIADB:
-  Endpoint: GET /api/dashboard/stats
+  MODALITA XAMPP:
+  Endpoint: dashboard-stats.php
   Query possibili:
   - SELECT COUNT(*) FROM reservations WHERE date = CURDATE();
   - SELECT COUNT(*) FROM orders WHERE status NOT IN ('Consegnato');
   - SELECT COUNT(*) FROM reviews;
   - SELECT SUM(total) FROM orders WHERE DATE(created_at) = CURDATE();
-  Il backend puo restituire numeri aggregati riducendo traffico e carico client.
+  PHP puo restituire numeri aggregati riducendo traffico e carico client.
   */
   const db = readDatabase();
   const today = new Date().toISOString().slice(0, 10);

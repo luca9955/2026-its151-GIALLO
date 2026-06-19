@@ -1,21 +1,13 @@
-export const DATABASE_MODE = "MARIADB";
+export const DATABASE_MODE = "XAMPP";
 
 /*
-CAMBIO FUTURO:
-
-Sostituire:
+MODALITA DATABASE:
 
 LOCAL
+Usa LocalStorage del browser.
 
-con:
+XAMPP
+Usa endpoint PHP serviti da Apache/XAMPP e database MySQL locale.
 
-MARIADB
-
-Esempio:
-
-export const DATABASE_MODE = "MARIADB";
-
-Dopo questa modifica il frontend dovra continuare a funzionare senza
-cambiamenti. Il provider MARIADB dovra delegare a data/api/apiClient.js,
-mentre le pagine e i repository manterranno lo stesso contratto pubblico.
+Le pagine e i repository mantengono lo stesso contratto pubblico.
 */

@@ -1,0 +1,73 @@
+CONFIGURAZIONE XAMPP - FICSIT RESTAURANT OS
+===========================================
+
+Questo progetto usa pagine HTML/CSS/JS e un piccolo backend PHP nella cartella api.
+Per vedere i dati dal database devi aprire il sito tramite Apache di XAMPP, non come file locale.
+
+PASSI CONSIGLIATI
+-----------------
+
+1. Copia o sposta la cartella "Progetto Finale" dentro:
+
+   C:\xampp\htdocs\
+
+2. Avvia XAMPP Control Panel.
+
+3. Avvia questi moduli:
+
+   - Apache
+   - MySQL
+
+4. Apri il sito da browser:
+
+   http://localhost/Progetto%20Finale/home.html
+
+5. Il primo caricamento chiama:
+
+   api/health.php
+   api/database.php
+
+   Questi file creano automaticamente il database ficsit_restaurant,
+   le tabelle principali e i dati iniziali di menu, tavoli e recensioni.
+
+CREDENZIALI DATABASE
+--------------------
+
+La configurazione predefinita e in:
+
+api/bootstrap.php
+
+Valori standard XAMPP:
+
+DB_HOST = 127.0.0.1
+DB_PORT = 3306
+DB_NAME = ficsit_restaurant
+DB_USER = root
+DB_PASSWORD = vuota
+
+Se nel tuo XAMPP hai impostato una password per root, cambia DB_PASSWORD.
+
+TABELLE CREATE
+--------------
+
+- users
+- tables
+- reservations
+- orders
+- menu
+- reviews
+
+SCRIPT SQL OPZIONALE
+--------------------
+
+Se vuoi creare le tabelle manualmente da phpMyAdmin, importa:
+
+database/xampp-schema.sql
+
+Non e obbligatorio, perche gli endpoint PHP creano lo schema automaticamente.
+
+NOTA IMPORTANTE
+---------------
+
+Se apri il sito con doppio click su home.html, le chiamate PHP non funzionano.
+Devi usare un indirizzo http://localhost/... servito da XAMPP.

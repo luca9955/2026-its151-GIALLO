@@ -104,3 +104,10 @@ ON DUPLICATE KEY UPDATE
   price = VALUES(price),
   image = VALUES(image),
   available = VALUES(available);
+
+INSERT INTO reviews (id, customer_name, stars, comment) VALUES
+  ('REV-SEED-001', 'Ada', 5, 'Interfaccia operativa impeccabile e burger calibrato al millimetro.')
+ON DUPLICATE KEY UPDATE
+  customer_name = VALUES(customer_name),
+  stars = VALUES(stars),
+  comment = VALUES(comment);
