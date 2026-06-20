@@ -96,7 +96,8 @@ INSERT INTO menu (id, name, category, description, price, image, available) VALU
   ('MENU-002', 'Conveyor Ribs', 'Linea Proteica', 'Costine glassate a bassa temperatura con riduzione affumicata e chips di patate.', 21.00, 'assets/images/menu/conveyor-ribs.png', TRUE),
   ('MENU-003', 'Power Slug Salad', 'Biomassa Premium', 'Insalata croccante con avocado, semi tostati, lime e dressing verde luminoso.', 12.00, 'assets/images/menu/power-slug-salad.png', TRUE),
   ('MENU-004', 'Foundry Carbonara', 'Pasta Fusa', 'Carbonara cremosa con guanciale croccante e pepe tostato su piatto in acciaio.', 14.00, 'assets/images/menu/foundry-carbonara.png', TRUE),
-  ('MENU-005', 'Space Elevator Sundae', 'Dessert Logistici', 'Gelato vaniglia, crumble cacao, caramello salato e granella arancio.', 8.00, 'assets/images/menu/space-elevator-sundae.png', TRUE)
+  ('MENU-005', 'Space Elevator Sundae', 'Dessert Logistici', 'Gelato vaniglia, crumble cacao, caramello salato e granella arancio.', 8.00, 'assets/images/menu/space-elevator-sundae.png', TRUE),
+  ('MENU-006', 'Budino Ficsit', 'Dessert Logistici', 'Budino al cioccolato di sterco di bonobo', 8.50, 'assets/images/menu/budino-ficsit.png', TRUE)
 ON DUPLICATE KEY UPDATE
   name = VALUES(name),
   category = VALUES(category),

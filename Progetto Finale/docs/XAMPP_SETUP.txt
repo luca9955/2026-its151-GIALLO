@@ -66,6 +66,32 @@ database/xampp-schema.sql
 
 Non e obbligatorio, perche gli endpoint PHP creano lo schema automaticamente.
 
+LOGIN ADMIN
+-----------
+
+L'area admin e protetta da sessione PHP.
+
+URL:
+
+http://localhost/Progetto%20Finale/principale.php
+
+Credenziali iniziali:
+
+utente: admin
+password: admin123
+
+Per cambiarle modifica:
+
+admin-auth.php
+
+In particolare:
+
+- ADMIN_USERNAME
+- ADMIN_PASSWORD_SHA256
+
+Per generare un nuovo hash SHA-256 puoi usare un generatore affidabile oppure PHP.
+In produzione e consigliato usare password_hash/password_verify e un account dedicato.
+
 NOTA IMPORTANTE
 ---------------
 

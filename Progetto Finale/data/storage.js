@@ -50,6 +50,15 @@ const defaultMenu = [
     image: "assets/images/menu/space-elevator-sundae.png",
     available: true,
   },
+  {
+    id: "MENU-006",
+    name: "Budino Ficsit",
+    category: "Dessert Logistici",
+    description: "Budino al cioccolato di sterco di bonobo",
+    price: 8.5,
+    image: "assets/images/menu/budino-ficsit.png",
+    available: true,
+  },
 ];
 
 const defaultDatabase = {
@@ -143,6 +152,7 @@ function migrateDefaultVisualAssets() {
     "MENU-003": "assets/images/menu/power-slug-salad.png",
     "MENU-004": "assets/images/menu/foundry-carbonara.png",
     "MENU-005": "assets/images/menu/space-elevator-sundae.png",
+    "MENU-006": "assets/images/menu/budino-ficsit.png",
   };
   const replaceableImages = new Set([
     "assets/images/menu-line.svg",
@@ -161,6 +171,15 @@ function migrateDefaultVisualAssets() {
 
   if (changed) {
     writeDatabase({ ...db, menu });
+  }
+}
+
+function migrateDefaultMenuItems() {
+  const db = readDatabase();
+  const existingIds = new Set(db.menu.map((item) => item.id));
+  const missingItems = defaultMenu.filter((item) => !existingIds.has(item.id));
+  if (missingItems.length) {
+    writeDatabase({ ...db, menu: [...db.menu, ...clone(missingItems)] });
   }
 }
 
@@ -194,6 +213,7 @@ export function initializeDatabase() {
   if (!localStorage.getItem(DB_KEY)) {
     writeDatabase(clone(defaultDatabase));
   } else {
+    migrateDefaultMenuItems();
     migrateDefaultVisualAssets();
   }
 

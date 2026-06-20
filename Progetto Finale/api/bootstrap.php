@@ -150,19 +150,17 @@ function seed_database(PDO $pdo): void
         $tableStatement->execute($table);
     }
 
-    $menuCount = (int) $pdo->query('SELECT COUNT(*) FROM menu')->fetchColumn();
-    if ($menuCount === 0) {
-        $menu = [
-            ['MENU-001', 'Assembler Burger', 'Moduli Caldi', 'Doppio smash burger, cheddar fuso, cipolla caramellata e salsa arancio industriale.', 15.50, 'assets/images/menu/assembler-burger.png', 1],
-            ['MENU-002', 'Conveyor Ribs', 'Linea Proteica', 'Costine glassate a bassa temperatura con riduzione affumicata e chips di patate.', 21.00, 'assets/images/menu/conveyor-ribs.png', 1],
-            ['MENU-003', 'Power Slug Salad', 'Biomassa Premium', 'Insalata croccante con avocado, semi tostati, lime e dressing verde luminoso.', 12.00, 'assets/images/menu/power-slug-salad.png', 1],
-            ['MENU-004', 'Foundry Carbonara', 'Pasta Fusa', 'Carbonara cremosa con guanciale croccante e pepe tostato su piatto in acciaio.', 14.00, 'assets/images/menu/foundry-carbonara.png', 1],
-            ['MENU-005', 'Space Elevator Sundae', 'Dessert Logistici', 'Gelato vaniglia, crumble cacao, caramello salato e granella arancio.', 8.00, 'assets/images/menu/space-elevator-sundae.png', 1],
-        ];
-        $menuStatement = $pdo->prepare('INSERT INTO menu (id, name, category, description, price, image, available) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        foreach ($menu as $item) {
-            $menuStatement->execute($item);
-        }
+    $menu = [
+        ['MENU-001', 'Assembler Burger', 'Moduli Caldi', 'Doppio smash burger, cheddar fuso, cipolla caramellata e salsa arancio industriale.', 15.50, 'assets/images/menu/assembler-burger.png', 1],
+        ['MENU-002', 'Conveyor Ribs', 'Linea Proteica', 'Costine glassate a bassa temperatura con riduzione affumicata e chips di patate.', 21.00, 'assets/images/menu/conveyor-ribs.png', 1],
+        ['MENU-003', 'Power Slug Salad', 'Biomassa Premium', 'Insalata croccante con avocado, semi tostati, lime e dressing verde luminoso.', 12.00, 'assets/images/menu/power-slug-salad.png', 1],
+        ['MENU-004', 'Foundry Carbonara', 'Pasta Fusa', 'Carbonara cremosa con guanciale croccante e pepe tostato su piatto in acciaio.', 14.00, 'assets/images/menu/foundry-carbonara.png', 1],
+        ['MENU-005', 'Space Elevator Sundae', 'Dessert Logistici', 'Gelato vaniglia, crumble cacao, caramello salato e granella arancio.', 8.00, 'assets/images/menu/space-elevator-sundae.png', 1],
+        ['MENU-006', 'Budino Ficsit', 'Dessert Logistici', 'Budino al cioccolato di sterco di bonobo', 8.50, 'assets/images/menu/budino-ficsit.png', 1],
+    ];
+    $menuStatement = $pdo->prepare('INSERT IGNORE INTO menu (id, name, category, description, price, image, available) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    foreach ($menu as $item) {
+        $menuStatement->execute($item);
     }
 
     $reviewCount = (int) $pdo->query('SELECT COUNT(*) FROM reviews')->fetchColumn();

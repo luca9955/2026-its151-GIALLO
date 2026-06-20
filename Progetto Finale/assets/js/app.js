@@ -24,6 +24,11 @@ let selectedTable = "";
 let selectedStars = 5;
 let activeMenuCategory = "Tutti";
 let menuSearchTerm = "";
+let easterBound = false;
+let easterKeyTrail = [];
+let menuSecretFound = false;
+
+const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 
 function qs(selector, root = document) {
   return root.querySelector(selector);
@@ -31,6 +36,21 @@ function qs(selector, root = document) {
 
 function qsa(selector, root = document) {
   return [...root.querySelectorAll(selector)];
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[char]);
+}
+
+function ratingHtml(stars) {
+  const safeStars = Math.max(0, Math.min(5, Number(stars) || 0));
+  return `${"&#9733;".repeat(safeStars)}${"&#9734;".repeat(5 - safeStars)}`;
 }
 
 function toast(message) {
@@ -47,6 +67,102 @@ function toast(message) {
   item.textContent = message;
   region.append(item);
   setTimeout(() => item.remove(), 3800);
+}
+
+function ensureEasterLayer() {
+  let layer = qs(".easter-layer");
+  if (!layer) {
+    layer = document.createElement("div");
+    layer.className = "easter-layer";
+    layer.setAttribute("aria-live", "polite");
+    document.body.append(layer);
+  }
+  return layer;
+}
+
+function showEasterMessage(title, detail) {
+  const layer = ensureEasterLayer();
+  const message = document.createElement("div");
+  message.className = "easter-message";
+  message.innerHTML = `<strong>${esc(title)}</strong><span>${esc(detail)}</span>`;
+  layer.append(message);
+  setTimeout(() => message.remove(), 4200);
+}
+
+function rainEasterTokens(label, count = 18) {
+  const layer = ensureEasterLayer();
+  for (let index = 0; index < count; index += 1) {
+    const token = document.createElement("span");
+    token.className = "easter-token";
+    token.textContent = label;
+    token.style.setProperty("--x", `${Math.random() * 100}%`);
+    token.style.setProperty("--delay", `${Math.random() * 0.8}s`);
+    token.style.setProperty("--duration", `${2.4 + Math.random() * 1.4}s`);
+    token.style.setProperty("--drift", `${Math.random() * 86 - 43}px`);
+    layer.append(token);
+    setTimeout(() => token.remove(), 4800);
+  }
+}
+
+function activateEasterProtocol(title, detail, token = "FICSIT", duration = 5200) {
+  document.body.classList.add("is-easter-active");
+  showEasterMessage(title, detail);
+  rainEasterTokens(token);
+  setTimeout(() => document.body.classList.remove("is-easter-active"), duration);
+}
+
+function activateVisibleTicket() {
+  activateEasterProtocol("Ticket FICSIT emesso", "Bonus efficienza: pausa approvata per 0.4 secondi.", "TICKET");
+}
+
+function activateHiddenProtocol() {
+  activateEasterProtocol("Protocollo segreto attivo", "La produzione culinaria entra in modalita massima efficienza.", "250%");
+}
+
+function activateBudinoProtocol() {
+  activateEasterProtocol("Budino Ficsit classificato", "Dessert logistico autorizzato dal controllo qualita.", "BUDINO");
+}
+
+function isTypingField(target) {
+  return Boolean(target?.closest?.("input, textarea, select, [contenteditable='true']")) || Boolean(target?.isContentEditable);
+}
+
+function maybeActivateMenuSearchEgg(term) {
+  if (menuSecretFound) return;
+  if (term.toLowerCase().includes("budino")) {
+    menuSecretFound = true;
+    activateBudinoProtocol();
+  }
+}
+
+function bindEasterEggs() {
+  if (easterBound) return;
+  easterBound = true;
+
+  const visibleButton = document.createElement("button");
+  visibleButton.className = "visible-easter";
+  visibleButton.type = "button";
+  visibleButton.textContent = "FICSIT TICKET";
+  visibleButton.setAttribute("aria-label", "Easter egg visibile FICSIT Ticket");
+  visibleButton.addEventListener("click", activateVisibleTicket);
+  document.body.append(visibleButton);
+
+  document.addEventListener("keydown", (event) => {
+    if (isTypingField(event.target)) return;
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    easterKeyTrail = [...easterKeyTrail, key].slice(-konamiCode.length);
+    if (easterKeyTrail.join("|") === konamiCode.join("|")) {
+      easterKeyTrail = [];
+      activateHiddenProtocol();
+    }
+  });
+
+  document.addEventListener("dblclick", (event) => {
+    const image = event.target.closest(".card__media, .dish__image, .menu-dish__media img");
+    if (image?.getAttribute("alt")?.toLowerCase().includes("budino")) {
+      activateBudinoProtocol();
+    }
+  });
 }
 
 function updateMiniStats() {
@@ -74,11 +190,11 @@ function renderMenuPreview() {
     .map(
       (item) => `
         <article class="card">
-          <img class="card__media" src="${item.image}" alt="Linea produzione del piatto ${item.name}" loading="lazy">
+          <img class="card__media" src="${esc(item.image)}" alt="Linea produzione del piatto ${esc(item.name)}" loading="lazy">
           <div class="card__body">
-            <p class="eyebrow">${item.category}</p>
-            <h3>${item.name}</h3>
-            <p>${item.description}</p>
+            <p class="eyebrow">${esc(item.category)}</p>
+            <h3>${esc(item.name)}</h3>
+            <p>${esc(item.description)}</p>
             <strong class="dish__price">${euro.format(item.price)}</strong>
           </div>
         </article>
@@ -120,14 +236,14 @@ function renderFullMenu() {
       (item) => `
         <article class="panel menu-dish">
           <div class="menu-dish__media">
-            <img src="${item.image}" alt="Modulo culinario ${item.name}" loading="lazy">
-            <span>${item.category}</span>
+            <img src="${esc(item.image)}" alt="Modulo culinario ${esc(item.name)}" loading="lazy">
+            <span>${esc(item.category)}</span>
           </div>
           <div class="menu-dish__body">
             <div>
-              <p class="eyebrow">${item.category}</p>
-              <h3>${item.name}</h3>
-              <p>${item.description}</p>
+              <p class="eyebrow">${esc(item.category)}</p>
+              <h3>${esc(item.name)}</h3>
+              <p>${esc(item.description)}</p>
             </div>
             <div class="menu-dish__footer">
               <strong class="dish__price">${euro.format(item.price)}</strong>
@@ -146,8 +262,8 @@ function renderMenuFilters(categories) {
   mount.innerHTML = categories
     .map(
       (category) => `
-        <button class="menu-filter ${category === activeMenuCategory ? "is-active" : ""}" type="button" data-category="${category}" aria-pressed="${category === activeMenuCategory}">
-          ${category}
+        <button class="menu-filter ${category === activeMenuCategory ? "is-active" : ""}" type="button" data-category="${esc(category)}" aria-pressed="${category === activeMenuCategory}">
+          ${esc(category)}
         </button>
       `,
     )
@@ -161,6 +277,7 @@ function bindMenuCatalog() {
 
   search.addEventListener("input", (event) => {
     menuSearchTerm = event.target.value.trim();
+    maybeActivateMenuSearchEgg(menuSearchTerm);
     renderFullMenu();
   });
 
@@ -180,17 +297,17 @@ function renderOrderMenu() {
       const quantity = orderDraft.get(item.id)?.quantity || 0;
       return `
         <article class="panel dish" data-id="${item.id}">
-          <img class="dish__image" src="${item.image}" alt="Piatto ${item.name} sulla linea logistica" loading="lazy">
+          <img class="dish__image" src="${esc(item.image)}" alt="Piatto ${esc(item.name)} sulla linea logistica" loading="lazy">
           <div>
-            <p class="eyebrow">${item.category}</p>
-            <h3>${item.name}</h3>
-            <p>${item.description}</p>
+            <p class="eyebrow">${esc(item.category)}</p>
+            <h3>${esc(item.name)}</h3>
+            <p>${esc(item.description)}</p>
             <strong class="dish__price">${euro.format(item.price)}</strong>
           </div>
-          <div class="qty" aria-label="Quantita ${item.name}">
-            <button type="button" data-action="decrement" aria-label="Rimuovi ${item.name}">-</button>
+          <div class="qty" aria-label="Quantita ${esc(item.name)}">
+            <button type="button" data-action="decrement" aria-label="Rimuovi ${esc(item.name)}">-</button>
             <span>${quantity}</span>
-            <button type="button" data-action="increment" aria-label="Aggiungi ${item.name}">+</button>
+            <button type="button" data-action="increment" aria-label="Aggiungi ${esc(item.name)}">+</button>
           </div>
         </article>
       `;
@@ -291,11 +408,11 @@ function renderBookingMap() {
     button.setAttribute("aria-label", `${table.code}, ${table.capacity} posti, stato ${stateLabels[table.state]}`);
     button.innerHTML = `
       <span class="table-node__label">
-        <strong>${table.code.replace("TABLE-HUB-", "Tavolo ")}</strong>
-        <span>${canFit ? stateLabels[table.state] : "Troppo piccolo"}</span>
+        <strong>${esc(table.code.replace("TABLE-HUB-", "Tavolo "))}</strong>
+        <span>${esc(canFit ? stateLabels[table.state] : "Troppo piccolo")}</span>
         <span class="table-node__capacity">${table.capacity} posti</span>
         <span class="table-node__meta">
-          <span class="table-node__pill">${table.priority}</span>
+          <span class="table-node__pill">${esc(table.priority)}</span>
           <span class="table-node__pill">${table.reservations.length} pren.</span>
         </span>
       </span>
@@ -370,10 +487,10 @@ function bindBooking() {
     if (!node || !tooltip) return;
     const table = getTableStates().find((item) => item.code === node.dataset.table);
     tooltip.innerHTML = `
-      <strong>${table.code}</strong><br>
-      STATO: ${stateLabels[table.state]}<br>
+      <strong>${esc(table.code)}</strong><br>
+      STATO: ${esc(stateLabels[table.state])}<br>
       CAPIENZA: ${table.capacity} posti<br>
-      PRIORITA: ${table.priority}<br>
+      PRIORITA: ${esc(table.priority)}<br>
       PRENOTAZIONI: ${table.reservations.length}
     `;
     tooltip.style.left = `${event.clientX + 16}px`;
@@ -430,9 +547,9 @@ function renderReviews() {
     .map(
       (review) => `
         <article class="panel">
-          <p class="eyebrow">${"★".repeat(review.stars)}${"☆".repeat(5 - review.stars)}</p>
-          <h3>${review.customerName}</h3>
-          <p>${review.comment}</p>
+          <p class="eyebrow">${ratingHtml(review.stars)}</p>
+          <h3>${esc(review.customerName)}</h3>
+          <p>${esc(review.comment)}</p>
         </article>
       `,
     )
@@ -480,13 +597,14 @@ function renderReviewPreview() {
   if (!preview || !form) return;
   const data = Object.fromEntries(new FormData(form));
   preview.innerHTML = `
-    <p class="eyebrow">${"★".repeat(selectedStars)}${"☆".repeat(5 - selectedStars)}</p>
-    <h3>${data.customerName || "OPERATORE"}</h3>
-    <p>${data.comment || "Preview del feedback in attesa di trasmissione."}</p>
+    <p class="eyebrow">${ratingHtml(selectedStars)}</p>
+    <h3>${esc(data.customerName || "OPERATORE")}</h3>
+    <p>${esc(data.comment || "Preview del feedback in attesa di trasmissione.")}</p>
   `;
 }
 
 function bootPage() {
+  bindEasterEggs();
   updateMiniStats();
   renderMenuPreview();
   renderFullMenu();
