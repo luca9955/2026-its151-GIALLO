@@ -22,6 +22,7 @@ const page = document.body.dataset.page;
 const orderDraft = new Map();
 let selectedTable = "";
 let activeTableSession = null;
+let bookingTableStates = [];
 let selectedStars = 5;
 let activeMenuCategory = "Tutti";
 let menuSearchTerm = "";
@@ -446,6 +447,7 @@ function renderBookingMap() {
   const floor = qs("#mapFloor");
   if (!floor) return;
   const tables = getTableStates();
+  bookingTableStates = tables;
   const persons = requestedPersons();
   const selected = tables.find((table) => table.code === selectedTable);
   if (selected && (selected.state !== "libero" || (persons && selected.capacity < persons))) {
@@ -478,15 +480,15 @@ function renderBookingMap() {
     `;
     floor.append(button);
   });
-  updateSelectedTablePanel();
+  updateSelectedTablePanel(tables);
 }
 
-function updateSelectedTablePanel() {
+function updateSelectedTablePanel(tables = bookingTableStates) {
   const output = qs("#selectedTable");
   const state = qs("#selectedState");
   const capacity = qs("#selectedCapacity");
   const reservations = qs("#selectedReservations");
-  const table = getTableStates().find((item) => item.code === selectedTable);
+  const table = tables.find((item) => item.code === selectedTable);
 
   if (!table) {
     if (output) output.textContent = "NESSUN TAVOLO";
@@ -544,7 +546,8 @@ function bindBooking() {
   floor.addEventListener("mousemove", (event) => {
     const node = event.target.closest(".table-node");
     if (!node || !tooltip) return;
-    const table = getTableStates().find((item) => item.code === node.dataset.table);
+    const table = bookingTableStates.find((item) => item.code === node.dataset.table);
+    if (!table) return;
     tooltip.innerHTML = `
       <strong>${esc(table.code)}</strong><br>
       STATO: ${esc(stateLabels[table.state])}<br>

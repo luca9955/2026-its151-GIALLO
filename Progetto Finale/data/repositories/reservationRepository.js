@@ -15,7 +15,15 @@ export const TABLES = Array.from({ length: 16 }, (_, index) => {
 });
 
 export function listReservations() {
-  return getReservations().sort((a, b) => `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`));
+  return readReservations().sort((a, b) => `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`));
+}
+
+function readReservations() {
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/reservations");
+  }
+
+  return getReservations();
 }
 
 export function createReservation(data) {
@@ -64,18 +72,18 @@ export function clearTableSession() {
 
 export function updateReservationStatus(id, status) {
   saveReservations(
-    getReservations().map((reservation) =>
+    readReservations().map((reservation) =>
       reservation.id === id ? { ...reservation, status, updatedAt: new Date().toISOString() } : reservation,
     ),
   );
 }
 
 export function removeReservation(id) {
-  saveReservations(getReservations().filter((reservation) => reservation.id !== id));
+  saveReservations(readReservations().filter((reservation) => reservation.id !== id));
 }
 
 export function getTableStates() {
-  const activeReservations = getReservations().filter((reservation) => ["In attesa", "Approvata"].includes(reservation.status));
+  const activeReservations = readReservations().filter((reservation) => ["In attesa", "Approvata"].includes(reservation.status));
   return TABLES.map((table) => {
     const reservations = activeReservations.filter((reservation) => reservation.tableCode === table.code);
     const hasApproved = reservations.some((reservation) => reservation.status === "Approvata");
