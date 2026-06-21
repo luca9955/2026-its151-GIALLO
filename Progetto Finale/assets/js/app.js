@@ -1,7 +1,7 @@
 import { initializeDatabase, onDatabaseUpdate, getDashboardStats } from "../../data/storage.js";
 import { listMenu } from "../../data/repositories/menuRepository.js";
 import { createOrder } from "../../data/repositories/orderRepository.js";
-import { createReservation, getTableStates } from "../../data/repositories/reservationRepository.js";
+import { clearTableSession, createReservation, getTableSession, getTableStates } from "../../data/repositories/reservationRepository.js";
 import { createReview, listReviews } from "../../data/repositories/reviewRepository.js";
 
 initializeDatabase();
@@ -21,6 +21,7 @@ const stateTone = {
 const page = document.body.dataset.page;
 const orderDraft = new Map();
 let selectedTable = "";
+let activeTableSession = null;
 let selectedStars = 5;
 let activeMenuCategory = "Tutti";
 let menuSearchTerm = "";
@@ -327,8 +328,13 @@ function bindOrder() {
   const mount = qs("#orderMenu");
   const form = qs("#orderForm");
   if (!mount || !form) return;
+  refreshOrderSession();
 
   mount.addEventListener("click", (event) => {
+    if (!activeTableSession?.active) {
+      toast("Prenota un tavolo prima di ordinare.");
+      return;
+    }
     const button = event.target.closest("button");
     const row = event.target.closest("[data-id]");
     if (!button || !row) return;
@@ -346,18 +352,71 @@ function bindOrder() {
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    refreshOrderSession();
+    if (!activeTableSession?.active) {
+      toast("Prenotazione tavolo mancante o scaduta. Prenota un tavolo prima di ordinare.");
+      return;
+    }
     const items = [...orderDraft.values()];
     if (!items.length) {
       toast("Seleziona almeno un modulo culinario.");
       return;
     }
-    const customerName = new FormData(form).get("customerName");
-    const order = createOrder({ customerName, items });
+    let order;
+    try {
+      order = createOrder({ items });
+    } catch (error) {
+      refreshOrderSession();
+      toast(error.message || "Ordine rifiutato: prenotazione tavolo non valida.");
+      return;
+    }
     orderDraft.clear();
     form.reset();
     renderOrderMenu();
-    toast(`Ordine ${order.id} ricevuto dal sistema logistico.`);
+    toast(`Ordine ${order.id} ricevuto per ${order.tableCode}.`);
   });
+
+  qs("[data-clear-table-session]")?.addEventListener("click", () => {
+    clearTableSession();
+    activeTableSession = { active: false };
+    orderDraft.clear();
+    renderOrderMenu();
+    renderOrderSession();
+    toast("Sessione tavolo chiusa.");
+  });
+}
+
+function refreshOrderSession() {
+  activeTableSession = getTableSession();
+  renderOrderSession();
+}
+
+function renderOrderSession() {
+  const panel = qs("#orderSession");
+  const form = qs("#orderForm");
+  const submit = form?.querySelector("[type='submit']");
+  const clearButton = qs("[data-clear-table-session]");
+  if (!panel || !form || !submit) return;
+
+  if (!activeTableSession?.active) {
+    panel.innerHTML = `
+      <span class="selected-card__kicker">Prenotazione richiesta</span>
+      <strong>Nessun tavolo attivo</strong>
+      <p>Prenota un tavolo prima di inviare ordinazioni.</p>
+      <a class="button button--solid" href="prenotazione.html">Prenota tavolo</a>
+    `;
+    submit.disabled = true;
+    if (clearButton) clearButton.disabled = true;
+    return;
+  }
+
+  panel.innerHTML = `
+    <span class="selected-card__kicker">Tavolo associato</span>
+    <strong>${esc(activeTableSession.tableCode)}</strong>
+    <p>Prenotazione ${esc(activeTableSession.reservationId)} verificata lato server.</p>
+  `;
+  submit.disabled = false;
+  if (clearButton) clearButton.disabled = false;
 }
 
 function requestedPersons() {

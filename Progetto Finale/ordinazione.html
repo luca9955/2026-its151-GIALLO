@@ -35,9 +35,13 @@
             <p class="eyebrow">Shipment manifest</p>
             <h2>Totale <span id="orderTotal">€0</span></h2>
             <p id="orderCount">0 moduli</p>
+            <div class="selected-card" id="orderSession" aria-live="polite">
+              <span class="selected-card__kicker">Tavolo associato</span>
+              <strong>Verifica in corso</strong>
+            </div>
             <form id="orderForm" class="form-grid">
-              <div class="field field--full"><label for="customerName">Nome cliente</label><input id="customerName" name="customerName" required autocomplete="name"></div>
               <button class="button button--solid field--full" type="submit">Invia ordine</button>
+              <button class="button field--full" type="button" data-clear-table-session>Chiudi sessione tavolo</button>
             </form>
           </aside>
         </section>

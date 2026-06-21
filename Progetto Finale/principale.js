@@ -181,10 +181,11 @@ function renderOrders() {
   page(`
     <p class="eyebrow">Dispatch repository</p>
     <h2>Ordinazioni</h2>
-    ${toolbar("Cerca cliente, ordine o stato")}
-    ${table(["ID", "Cliente", "Items", "Totale", "Stato"], rows.map((item) => [
+    ${toolbar("Cerca tavolo, ordine o stato")}
+    ${table(["ID", "Tavolo", "Prenotazione", "Items", "Totale", "Stato"], rows.map((item) => [
       esc(item.id),
-      esc(item.customerName),
+      esc(item.tableCode || "Tavolo non disponibile"),
+      esc(item.reservationId || "-"),
       item.items.map((entry) => `${esc(entry.name)} x${entry.quantity}`).join("<br>"),
       euro.format(item.total),
       stateSelect("order", item.id, item.status, orderStates),

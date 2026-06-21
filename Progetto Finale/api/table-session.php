@@ -8,15 +8,15 @@ try {
     $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
     if ($method === 'GET') {
-        json_response(read_database($pdo)['reservations']);
+        $session = active_reservation_session($pdo);
+        if (!$session) {
+            json_response(['active' => false], 401);
+        }
+        json_response(array_merge(['active' => true], $session));
     }
 
-    if ($method === 'POST') {
-        json_response(create_reservation($pdo, request_payload()), 201);
-    }
-
-    if ($method === 'PUT') {
-        replace_reservations($pdo, request_payload());
+    if ($method === 'DELETE' || $method === 'POST') {
+        clear_table_session_cookie();
         json_response(['ok' => true]);
     }
 

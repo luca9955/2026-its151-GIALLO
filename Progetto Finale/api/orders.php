@@ -11,7 +11,11 @@ try {
         json_response(read_database($pdo)['orders']);
     }
 
-    if ($method === 'PUT' || $method === 'POST') {
+    if ($method === 'POST') {
+        json_response(create_order_for_session($pdo, request_payload()), 201);
+    }
+
+    if ($method === 'PUT') {
         replace_orders($pdo, request_payload());
         json_response(['ok' => true]);
     }

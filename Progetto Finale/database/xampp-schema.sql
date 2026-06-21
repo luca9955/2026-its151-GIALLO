@@ -32,8 +32,11 @@ CREATE TABLE IF NOT EXISTS reservations (
   date DATE NOT NULL,
   time TIME NOT NULL,
   status ENUM('In attesa', 'Approvata', 'Rifiutata') NOT NULL DEFAULT 'In attesa',
+  session_token_hash CHAR(64) NULL,
+  session_expires_at DATETIME NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY reservations_session_token_unique (session_token_hash),
   CONSTRAINT reservations_user_fk FOREIGN KEY (user_id) REFERENCES users(id),
   CONSTRAINT reservations_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)
 );
@@ -41,12 +44,14 @@ CREATE TABLE IF NOT EXISTS reservations (
 CREATE TABLE IF NOT EXISTS orders (
   id VARCHAR(40) PRIMARY KEY,
   reservation_id VARCHAR(40) NULL,
-  customer_name VARCHAR(160) NOT NULL,
+  table_code VARCHAR(40) NULL,
+  customer_name VARCHAR(160) NULL,
   items_json JSON NOT NULL,
   total DECIMAL(10,2) NOT NULL,
   status ENUM('Ricevuto', 'Accettato', 'In preparazione', 'Pronto', 'Consegnato') NOT NULL DEFAULT 'Ricevuto',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT orders_reservation_fk FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+  CONSTRAINT orders_reservation_fk FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+  CONSTRAINT orders_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)
 );
 
 CREATE TABLE IF NOT EXISTS menu (

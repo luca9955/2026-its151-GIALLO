@@ -6,6 +6,8 @@ const DB_PORT = '3306';
 const DB_NAME = 'ficsit_restaurant';
 const DB_USER = 'root';
 const DB_PASSWORD = '';
+const TABLE_SESSION_COOKIE = 'ficsit_table_session';
+const TABLE_SESSION_DURATION_SECONDS = 4 * 60 * 60;
 
 function json_response(mixed $payload, int $status = 200): void
 {
@@ -88,8 +90,11 @@ function initialize_schema(PDO $pdo): void
           date DATE NOT NULL,
           time TIME NOT NULL,
           status ENUM('In attesa', 'Approvata', 'Rifiutata') NOT NULL DEFAULT 'In attesa',
+          session_token_hash CHAR(64) NULL,
+          session_expires_at DATETIME NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          UNIQUE KEY reservations_session_token_unique (session_token_hash),
           CONSTRAINT reservations_user_fk FOREIGN KEY (user_id) REFERENCES users(id),
           CONSTRAINT reservations_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
@@ -99,14 +104,23 @@ function initialize_schema(PDO $pdo): void
         CREATE TABLE IF NOT EXISTS orders (
           id VARCHAR(40) PRIMARY KEY,
           reservation_id VARCHAR(40) NULL,
-          customer_name VARCHAR(160) NOT NULL,
+          table_code VARCHAR(40) NULL,
+          customer_name VARCHAR(160) NULL,
           items_json JSON NOT NULL,
           total DECIMAL(10,2) NOT NULL,
           status ENUM('Ricevuto', 'Accettato', 'In preparazione', 'Pronto', 'Consegnato') NOT NULL DEFAULT 'Ricevuto',
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          CONSTRAINT orders_reservation_fk FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+          CONSTRAINT orders_reservation_fk FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+          CONSTRAINT orders_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
+
+    ensure_column($pdo, 'reservations', 'session_token_hash', 'ALTER TABLE reservations ADD COLUMN session_token_hash CHAR(64) NULL AFTER status');
+    ensure_column($pdo, 'reservations', 'session_expires_at', 'ALTER TABLE reservations ADD COLUMN session_expires_at DATETIME NULL AFTER session_token_hash');
+    ensure_index($pdo, 'reservations', 'reservations_session_token_unique', 'ALTER TABLE reservations ADD UNIQUE KEY reservations_session_token_unique (session_token_hash)');
+    ensure_column($pdo, 'orders', 'table_code', 'ALTER TABLE orders ADD COLUMN table_code VARCHAR(40) NULL AFTER reservation_id');
+    $pdo->exec('ALTER TABLE orders MODIFY customer_name VARCHAR(160) NULL');
+    ensure_index($pdo, 'orders', 'orders_table_fk', 'ALTER TABLE orders ADD CONSTRAINT orders_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)');
 
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS menu (
@@ -131,6 +145,32 @@ function initialize_schema(PDO $pdo): void
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
+}
+
+function ensure_column(PDO $pdo, string $table, string $column, string $sql): void
+{
+    $statement = $pdo->prepare('
+        SELECT COUNT(*)
+        FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?
+    ');
+    $statement->execute([$table, $column]);
+    if ((int) $statement->fetchColumn() === 0) {
+        $pdo->exec($sql);
+    }
+}
+
+function ensure_index(PDO $pdo, string $table, string $index, string $sql): void
+{
+    $statement = $pdo->prepare('
+        SELECT COUNT(*)
+        FROM information_schema.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?
+    ');
+    $statement->execute([$table, $index]);
+    if ((int) $statement->fetchColumn() === 0) {
+        $pdo->exec($sql);
+    }
 }
 
 function seed_database(PDO $pdo): void
@@ -174,7 +214,12 @@ function read_database(PDO $pdo): array
 {
     $menu = array_map('map_menu_item', $pdo->query('SELECT id, name, category, description, price, image, available FROM menu ORDER BY category, name')->fetchAll());
     $reservations = array_map('map_reservation', $pdo->query('SELECT r.*, u.nome, u.cognome, u.email, u.telefono FROM reservations r LEFT JOIN users u ON u.id = r.user_id ORDER BY r.date DESC, r.time DESC')->fetchAll());
-    $orders = array_map('map_order', $pdo->query('SELECT id, reservation_id, customer_name, items_json, total, status, created_at FROM orders ORDER BY created_at DESC')->fetchAll());
+    $orders = array_map('map_order', $pdo->query('
+        SELECT o.id, o.reservation_id, COALESCE(o.table_code, r.table_code) AS table_code, o.customer_name, o.items_json, o.total, o.status, o.created_at
+        FROM orders o
+        LEFT JOIN reservations r ON r.id = o.reservation_id
+        ORDER BY o.created_at DESC
+    ')->fetchAll());
     $reviews = array_map('map_review', $pdo->query('SELECT id, customer_name, stars, comment, created_at FROM reviews ORDER BY created_at DESC')->fetchAll());
 
     return [
@@ -212,6 +257,7 @@ function map_reservation(array $row): array
         'time' => substr((string) $row['time'], 0, 5),
         'tableCode' => $row['table_code'],
         'status' => $row['status'],
+        'sessionExpiresAt' => $row['session_expires_at'] ? date(DATE_ATOM, strtotime((string) $row['session_expires_at'])) : null,
         'createdAt' => date(DATE_ATOM, strtotime((string) $row['created_at'])),
         'updatedAt' => date(DATE_ATOM, strtotime((string) $row['updated_at'])),
     ];
@@ -222,7 +268,8 @@ function map_order(array $row): array
     return [
         'id' => $row['id'],
         'reservationId' => $row['reservation_id'],
-        'customerName' => $row['customer_name'],
+        'tableCode' => $row['table_code'],
+        'customerName' => $row['customer_name'] ?? '',
         'items' => json_decode((string) $row['items_json'], true) ?: [],
         'total' => (float) $row['total'],
         'status' => $row['status'],
@@ -297,13 +344,20 @@ function upsert_user(PDO $pdo, array $reservation): int
 
 function replace_reservations(PDO $pdo, array $reservations): void
 {
+    $sessionRows = $pdo->query('SELECT id, session_token_hash, session_expires_at FROM reservations')->fetchAll();
+    $sessionsByReservation = [];
+    foreach ($sessionRows as $row) {
+        $sessionsByReservation[$row['id']] = $row;
+    }
+
     $pdo->exec('DELETE FROM orders');
     $pdo->exec('DELETE FROM reservations');
     $statement = $pdo->prepare('
-        INSERT INTO reservations (id, user_id, table_code, persons, date, time, status, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO reservations (id, user_id, table_code, persons, date, time, status, session_token_hash, session_expires_at, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ');
     foreach ($reservations as $reservation) {
+        $session = $sessionsByReservation[$reservation['id']] ?? [];
         $statement->execute([
             $reservation['id'],
             upsert_user($pdo, $reservation),
@@ -312,6 +366,8 @@ function replace_reservations(PDO $pdo, array $reservations): void
             $reservation['date'],
             $reservation['time'],
             $reservation['status'] ?? 'In attesa',
+            $session['session_token_hash'] ?? null,
+            $session['session_expires_at'] ?? null,
             date('Y-m-d H:i:s', strtotime($reservation['createdAt'] ?? 'now')),
             date('Y-m-d H:i:s', strtotime($reservation['updatedAt'] ?? 'now')),
         ]);
@@ -321,12 +377,13 @@ function replace_reservations(PDO $pdo, array $reservations): void
 function replace_orders(PDO $pdo, array $orders): void
 {
     $pdo->exec('DELETE FROM orders');
-    $statement = $pdo->prepare('INSERT INTO orders (id, reservation_id, customer_name, items_json, total, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $statement = $pdo->prepare('INSERT INTO orders (id, reservation_id, table_code, customer_name, items_json, total, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
     foreach ($orders as $order) {
         $statement->execute([
             $order['id'],
             $order['reservationId'] ?? null,
-            $order['customerName'],
+            $order['tableCode'] ?? null,
+            $order['customerName'] ?? null,
             json_encode($order['items'] ?? [], JSON_UNESCAPED_UNICODE),
             (float) $order['total'],
             $order['status'] ?? 'Ricevuto',
@@ -355,4 +412,203 @@ function request_payload(): array
     $raw = file_get_contents('php://input') ?: '{}';
     $payload = json_decode($raw, true);
     return is_array($payload) ? $payload : [];
+}
+
+function reservation_session_expires_at(string $date, string $time): DateTimeImmutable
+{
+    $reservationAt = new DateTimeImmutable($date . ' ' . $time);
+    $expiresAt = $reservationAt->modify('+' . TABLE_SESSION_DURATION_SECONDS . ' seconds');
+    $minimumExpiry = (new DateTimeImmutable())->modify('+' . TABLE_SESSION_DURATION_SECONDS . ' seconds');
+    return $expiresAt > $minimumExpiry ? $expiresAt : $minimumExpiry;
+}
+
+function set_table_session_cookie(string $token, DateTimeImmutable $expiresAt): void
+{
+    setcookie(TABLE_SESSION_COOKIE, $token, [
+        'expires' => $expiresAt->getTimestamp(),
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+}
+
+function clear_table_session_cookie(): void
+{
+    setcookie(TABLE_SESSION_COOKIE, '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+}
+
+function active_reservation_session(PDO $pdo): ?array
+{
+    $token = $_COOKIE[TABLE_SESSION_COOKIE] ?? '';
+    if (!is_string($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
+        return null;
+    }
+
+    $statement = $pdo->prepare("
+        SELECT r.id, r.table_code, r.status, r.session_expires_at, t.capacity
+        FROM reservations r
+        INNER JOIN tables t ON t.code = r.table_code
+        WHERE r.session_token_hash = ?
+          AND r.session_expires_at > NOW()
+          AND r.status IN ('In attesa', 'Approvata')
+        LIMIT 1
+    ");
+    $statement->execute([hash('sha256', $token)]);
+    $reservation = $statement->fetch();
+    if (!$reservation) {
+        clear_table_session_cookie();
+        return null;
+    }
+
+    return [
+        'reservationId' => $reservation['id'],
+        'tableCode' => $reservation['table_code'],
+        'status' => $reservation['status'],
+        'expiresAt' => date(DATE_ATOM, strtotime((string) $reservation['session_expires_at'])),
+    ];
+}
+
+function create_reservation(PDO $pdo, array $payload): array
+{
+    $reservation = [
+        'id' => 'RES-' . strtoupper(base_convert((string) time(), 10, 36)) . '-' . strtoupper(bin2hex(random_bytes(3))),
+        'firstName' => trim((string) ($payload['firstName'] ?? '')),
+        'lastName' => trim((string) ($payload['lastName'] ?? '')),
+        'phone' => trim((string) ($payload['phone'] ?? '')),
+        'email' => trim((string) ($payload['email'] ?? '')),
+        'persons' => (int) ($payload['persons'] ?? 0),
+        'date' => (string) ($payload['date'] ?? ''),
+        'time' => (string) ($payload['time'] ?? ''),
+        'tableCode' => (string) ($payload['tableCode'] ?? ''),
+        'status' => 'In attesa',
+        'createdAt' => date(DATE_ATOM),
+        'updatedAt' => date(DATE_ATOM),
+    ];
+
+    if (!$reservation['firstName'] || !$reservation['lastName'] || !$reservation['phone'] || !$reservation['email']) {
+        json_response(['error' => 'Dati prenotazione incompleti'], 422);
+    }
+
+    if ($reservation['persons'] < 1 || !$reservation['date'] || !$reservation['time'] || !$reservation['tableCode']) {
+        json_response(['error' => 'Tavolo, data, ora e numero persone sono obbligatori'], 422);
+    }
+
+    $table = $pdo->prepare('SELECT code, capacity FROM tables WHERE code = ?');
+    $table->execute([$reservation['tableCode']]);
+    $tableRow = $table->fetch();
+    if (!$tableRow || (int) $tableRow['capacity'] < $reservation['persons']) {
+        json_response(['error' => 'Tavolo non valido per questa prenotazione'], 422);
+    }
+
+    $expiresAt = reservation_session_expires_at($reservation['date'], $reservation['time']);
+    $token = bin2hex(random_bytes(32));
+    $reservation['sessionExpiresAt'] = $expiresAt->format(DATE_ATOM);
+
+    $pdo->beginTransaction();
+    try {
+        $statement = $pdo->prepare('
+            INSERT INTO reservations (id, user_id, table_code, persons, date, time, status, session_token_hash, session_expires_at, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ');
+        $statement->execute([
+            $reservation['id'],
+            upsert_user($pdo, $reservation),
+            $reservation['tableCode'],
+            $reservation['persons'],
+            $reservation['date'],
+            $reservation['time'],
+            $reservation['status'],
+            hash('sha256', $token),
+            $expiresAt->format('Y-m-d H:i:s'),
+            date('Y-m-d H:i:s'),
+            date('Y-m-d H:i:s'),
+        ]);
+        $pdo->commit();
+    } catch (Throwable $error) {
+        $pdo->rollBack();
+        throw $error;
+    }
+
+    set_table_session_cookie($token, $expiresAt);
+    return $reservation;
+}
+
+function create_order_for_session(PDO $pdo, array $payload): array
+{
+    $session = active_reservation_session($pdo);
+    if (!$session) {
+        json_response(['error' => 'Prenotazione tavolo mancante o scaduta. Prenota un tavolo prima di ordinare.'], 403);
+    }
+
+    $items = $payload['items'] ?? [];
+    if (!is_array($items) || count($items) === 0) {
+        json_response(['error' => 'Seleziona almeno un piatto'], 422);
+    }
+
+    $ids = array_values(array_unique(array_filter(array_map(static fn ($item) => (string) ($item['id'] ?? ''), $items))));
+    if (!$ids) {
+        json_response(['error' => 'Ordine non valido'], 422);
+    }
+
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    $menuStatement = $pdo->prepare("SELECT id, name, price FROM menu WHERE available = 1 AND id IN ($placeholders)");
+    $menuStatement->execute($ids);
+    $menuById = [];
+    foreach ($menuStatement->fetchAll() as $menuItem) {
+        $menuById[$menuItem['id']] = $menuItem;
+    }
+
+    $normalizedItems = [];
+    foreach ($items as $item) {
+        $id = (string) ($item['id'] ?? '');
+        $quantity = (int) ($item['quantity'] ?? 0);
+        if ($quantity <= 0 || !isset($menuById[$id])) {
+            continue;
+        }
+        $normalizedItems[] = [
+            'id' => $id,
+            'name' => $menuById[$id]['name'],
+            'price' => (float) $menuById[$id]['price'],
+            'quantity' => $quantity,
+        ];
+    }
+
+    if (!$normalizedItems) {
+        json_response(['error' => 'Nessun piatto disponibile nell ordine'], 422);
+    }
+
+    $total = array_reduce($normalizedItems, static fn ($sum, $item) => $sum + $item['price'] * $item['quantity'], 0.0);
+    $order = [
+        'id' => 'ORD-' . strtoupper(base_convert((string) time(), 10, 36)) . '-' . strtoupper(bin2hex(random_bytes(3))),
+        'reservationId' => $session['reservationId'],
+        'tableCode' => $session['tableCode'],
+        'customerName' => '',
+        'items' => $normalizedItems,
+        'total' => $total,
+        'status' => 'Ricevuto',
+        'createdAt' => date(DATE_ATOM),
+    ];
+
+    $statement = $pdo->prepare('
+        INSERT INTO orders (id, reservation_id, table_code, customer_name, items_json, total, status, created_at)
+        VALUES (?, ?, ?, NULL, ?, ?, ?, ?)
+    ');
+    $statement->execute([
+        $order['id'],
+        $order['reservationId'],
+        $order['tableCode'],
+        json_encode($order['items'], JSON_UNESCAPED_UNICODE),
+        $order['total'],
+        $order['status'],
+        date('Y-m-d H:i:s'),
+    ]);
+
+    return $order;
 }

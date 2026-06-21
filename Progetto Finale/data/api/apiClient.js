@@ -6,6 +6,7 @@ const endpointMap = {
   "/menu": "api/menu.php",
   "/reservations": "api/reservations.php",
   "/orders": "api/orders.php",
+  "/table-session": "api/table-session.php",
   "/reviews": "api/reviews.php",
   "/dashboard/stats": "api/dashboard-stats.php",
 };
@@ -32,11 +33,13 @@ export async function requestJson(endpoint, options = {}) {
   */
   const response = await fetch(resolveEndpoint(endpoint), {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    credentials: "same-origin",
     ...options,
   });
 
   if (!response.ok) {
-    throw new Error(`Errore API ${response.status}: ${endpoint}`);
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload.error || `Errore API ${response.status}: ${endpoint}`);
   }
 
   return response.json();
@@ -54,7 +57,13 @@ export function requestJsonSync(endpoint, options = {}) {
   xhr.send(body);
 
   if (xhr.status < 200 || xhr.status >= 300) {
-    throw new Error(`Errore API ${xhr.status}: ${endpoint}`);
+    let payload = {};
+    try {
+      payload = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+    } catch (error) {
+      payload = {};
+    }
+    throw new Error(payload.error || `Errore API ${xhr.status}: ${endpoint}`);
   }
 
   return xhr.responseText ? JSON.parse(xhr.responseText) : null;

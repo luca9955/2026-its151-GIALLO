@@ -1,4 +1,6 @@
 import { getReservations, saveReservations } from "../storage.js";
+import { DATABASE_MODE } from "../database-config.js";
+import { requestJsonSync } from "../api/apiClient.js";
 
 export const TABLES = Array.from({ length: 16 }, (_, index) => {
   const id = index + 1;
@@ -17,6 +19,13 @@ export function listReservations() {
 }
 
 export function createReservation(data) {
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/reservations", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
   const reservation = {
     id: `RES-${Date.now().toString(36).toUpperCase()}`,
     firstName: data.firstName.trim(),
@@ -33,6 +42,24 @@ export function createReservation(data) {
   };
   saveReservations([reservation, ...getReservations()]);
   return reservation;
+}
+
+export function getTableSession() {
+  if (DATABASE_MODE === "XAMPP") {
+    try {
+      return requestJsonSync("/table-session");
+    } catch (error) {
+      return { active: false };
+    }
+  }
+
+  return { active: true, tableCode: "LOCAL" };
+}
+
+export function clearTableSession() {
+  if (DATABASE_MODE === "XAMPP") {
+    requestJsonSync("/table-session", { method: "DELETE" });
+  }
 }
 
 export function updateReservationStatus(id, status) {
