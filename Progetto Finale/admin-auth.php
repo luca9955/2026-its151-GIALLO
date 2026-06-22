@@ -2,13 +2,14 @@
 declare(strict_types=1);
 
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD_SHA256 = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
+const ADMIN_PASSWORD_HASH = '$2y$10$VrLGNR7JKPTLnrr.lezjpetdlKSzRkeruyCa7RVXTfqt150UxUymW';
 const ADMIN_MAX_ATTEMPTS = 5;
 const ADMIN_LOCK_SECONDS = 20;
 
 function admin_start_session(): void
 {
     if (session_status() !== PHP_SESSION_ACTIVE) {
+        ini_set('session.use_strict_mode', '1');
         $sessionPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ficsit-admin-sessions';
         if (!is_dir($sessionPath)) {
             mkdir($sessionPath, 0700, true);
@@ -17,6 +18,7 @@ function admin_start_session(): void
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => '/',
+            'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
@@ -73,9 +75,8 @@ function admin_register_failed_login(): void
 
 function admin_verify_credentials(string $username, string $password): bool
 {
-    $passwordHash = hash('sha256', $password);
     return hash_equals(ADMIN_USERNAME, $username)
-        && hash_equals(ADMIN_PASSWORD_SHA256, $passwordHash);
+        && password_verify($password, ADMIN_PASSWORD_HASH);
 }
 
 function admin_login(string $username): void

@@ -21,6 +21,10 @@ function ensureXamppMode() {
   }
 }
 
+function csrfHeaders() {
+  return window.ADMIN_CSRF ? { "X-CSRF-Token": window.ADMIN_CSRF } : {};
+}
+
 export async function requestJson(endpoint, options = {}) {
   ensureXamppMode();
 
@@ -32,14 +36,14 @@ export async function requestJson(endpoint, options = {}) {
   - ritentare le richieste idempotenti quando il server non risponde
   */
   const response = await fetch(resolveEndpoint(endpoint), {
-    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    headers: { "Content-Type": "application/json", ...csrfHeaders(), ...(options.headers || {}) },
     credentials: "same-origin",
     ...options,
   });
 
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
-    throw new Error(payload.error || `Errore API ${response.status}: ${endpoint}`);
+    throw new Error(payload.error || payload.message || `Errore API ${response.status}: ${endpoint}`);
   }
 
   return response.json();
@@ -52,6 +56,10 @@ export function requestJsonSync(endpoint, options = {}) {
   const xhr = new XMLHttpRequest();
   xhr.open(method, resolveEndpoint(endpoint), false);
   xhr.setRequestHeader("Content-Type", "application/json");
+  const csrf = window.ADMIN_CSRF || "";
+  if (csrf) {
+    xhr.setRequestHeader("X-CSRF-Token", csrf);
+  }
 
   const body = options.body ? options.body : null;
   xhr.send(body);
@@ -63,7 +71,7 @@ export function requestJsonSync(endpoint, options = {}) {
     } catch (error) {
       payload = {};
     }
-    throw new Error(payload.error || `Errore API ${xhr.status}: ${endpoint}`);
+    throw new Error(payload.error || payload.message || `Errore API ${xhr.status}: ${endpoint}`);
   }
 
   return xhr.responseText ? JSON.parse(xhr.responseText) : null;

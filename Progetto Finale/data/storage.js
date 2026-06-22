@@ -244,6 +244,10 @@ export function getMenu() {
   Query: SELECT id, name, category, description, price, image, available, created_at, updated_at FROM menu ORDER BY category, name;
   La risposta dovra restare un array di oggetti menu.
   */
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/menu");
+  }
+
   return readDatabase().menu;
 }
 
@@ -273,6 +277,10 @@ export function getReservations() {
   3) PHP dovra mantenere la stessa struttura JSON.
   4) Gestire errori server e timeout nel repository/data layer.
   */
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/reservations");
+  }
+
   return readDatabase().reservations;
 }
 
@@ -294,6 +302,10 @@ export function getOrders() {
   Query: SELECT id, reservation_id, customer_name, items_json, total, status, created_at FROM orders ORDER BY created_at DESC;
   items_json puo restare JSON o essere normalizzato in order_items.
   */
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/orders");
+  }
+
   return readDatabase().orders;
 }
 
@@ -315,6 +327,10 @@ export function getReviews() {
   Query: SELECT id, customer_name, stars, comment, created_at FROM reviews ORDER BY created_at DESC;
   Moderazione futura e permessi admin vanno gestiti lato PHP.
   */
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/reviews");
+  }
+
   return readDatabase().reviews;
 }
 
@@ -342,6 +358,10 @@ export function getDashboardStats() {
   - SELECT SUM(total) FROM orders WHERE DATE(created_at) = CURDATE();
   PHP puo restituire numeri aggregati riducendo traffico e carico client.
   */
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/dashboard/stats");
+  }
+
   const db = readDatabase();
   const today = new Date().toISOString().slice(0, 10);
   const reservationsToday = db.reservations.filter((item) => item.date === today).length;

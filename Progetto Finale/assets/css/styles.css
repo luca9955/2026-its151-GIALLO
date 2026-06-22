@@ -1453,3 +1453,10 @@ body.is-easter-active .brand__mark {
     display: none;
   }
 }
+
+.form-hint {
+  margin: -.2rem 0 .2rem;
+  color: var(--muted);
+  font-size: .86rem;
+  line-height: 1.45;
+}

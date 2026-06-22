@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS reservations (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY reservations_session_token_unique (session_token_hash),
+  INDEX reservations_table_slot_idx (table_code, date, time, status),
   CONSTRAINT reservations_user_fk FOREIGN KEY (user_id) REFERENCES users(id),
   CONSTRAINT reservations_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)
 );

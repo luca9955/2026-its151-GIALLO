@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/admin-auth.php';
 admin_require_login();
 $adminUser = $_SESSION['admin_user'] ?? ADMIN_USERNAME;
+$adminCsrf = admin_csrf_token();
 ?>
 <!doctype html>
 <html lang="it">
@@ -45,6 +46,9 @@ $adminUser = $_SESSION['admin_user'] ?? ADMIN_USERNAME;
         <iframe id="adminFrame" class="admin-frame" title="Dashboard operativa FICSIT"></iframe>
       </main>
     </div>
+    <script>
+      window.ADMIN_CSRF = "<?= htmlspecialchars($adminCsrf, ENT_QUOTES, 'UTF-8') ?>";
+    </script>
     <script type="module" src="principale.js"></script>
   </body>
 </html>

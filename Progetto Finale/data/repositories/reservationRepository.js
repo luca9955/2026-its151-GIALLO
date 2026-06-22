@@ -71,6 +71,13 @@ export function clearTableSession() {
 }
 
 export function updateReservationStatus(id, status) {
+  if (DATABASE_MODE === "XAMPP") {
+    return requestJsonSync("/reservations", {
+      method: "PATCH",
+      body: JSON.stringify({ id, status }),
+    });
+  }
+
   saveReservations(
     readReservations().map((reservation) =>
       reservation.id === id ? { ...reservation, status, updatedAt: new Date().toISOString() } : reservation,
@@ -82,8 +89,25 @@ export function removeReservation(id) {
   saveReservations(readReservations().filter((reservation) => reservation.id !== id));
 }
 
-export function getTableStates() {
-  const activeReservations = readReservations().filter((reservation) => ["In attesa", "Approvata"].includes(reservation.status));
+function minutesFromTime(value) {
+  const [hour, minute] = String(value || "00:00").slice(0, 5).split(":").map(Number);
+  return hour * 60 + minute;
+}
+
+function overlapsRequestedSlot(reservation, { date = "", time = "", durationMinutes = 120 } = {}) {
+  if (!date || !time) return true;
+  if (reservation.date !== date) return false;
+  const requestedStart = minutesFromTime(time);
+  const requestedEnd = requestedStart + durationMinutes;
+  const existingStart = minutesFromTime(reservation.time);
+  const existingEnd = existingStart + durationMinutes;
+  return requestedStart < existingEnd && requestedEnd > existingStart;
+}
+
+export function getTableStates(slot = {}) {
+  const activeReservations = readReservations()
+    .filter((reservation) => ["In attesa", "Approvata"].includes(reservation.status))
+    .filter((reservation) => overlapsRequestedSlot(reservation, slot));
   return TABLES.map((table) => {
     const reservations = activeReservations.filter((reservation) => reservation.tableCode === table.code);
     const hasApproved = reservations.some((reservation) => reservation.status === "Approvata");

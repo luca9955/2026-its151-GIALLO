@@ -17,6 +17,11 @@ const stateTone = {
   prenotato: "var(--orange)",
   occupato: "var(--red)",
 };
+const bookingOpeningWindows = [
+  { start: "18:00", end: "01:00" },
+];
+const bookingDurationMinutes = 120;
+const bookingMaxDaysAhead = 90;
 
 const page = document.body.dataset.page;
 const orderDraft = new Map();
@@ -425,6 +430,87 @@ function requestedPersons() {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
+function localDateValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function parseBookingDateTime(date, time) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || "") || !/^\d{2}:\d{2}$/.test(time || "")) {
+    return null;
+  }
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+  const value = new Date(year, month - 1, day, hour, minute, 0, 0);
+  if (
+    value.getFullYear() !== year ||
+    value.getMonth() !== month - 1 ||
+    value.getDate() !== day ||
+    value.getHours() !== hour ||
+    value.getMinutes() !== minute
+  ) {
+    return null;
+  }
+  return value;
+}
+
+function minutesFromTime(value) {
+  const [hour, minute] = value.split(":").map(Number);
+  return hour * 60 + minute;
+}
+
+function bookingFitsOpeningWindow(start, durationMinutes, window) {
+  const windowStart = minutesFromTime(window.start);
+  let windowEnd = minutesFromTime(window.end);
+  let normalizedStart = start;
+  if (windowEnd <= windowStart) {
+    windowEnd += 24 * 60;
+    if (normalizedStart < windowStart) normalizedStart += 24 * 60;
+  }
+  return normalizedStart >= windowStart && normalizedStart + durationMinutes <= windowEnd;
+}
+
+function validateBookingSchedule({ date, time }) {
+  const reservationAt = parseBookingDateTime(date, time);
+  if (!reservationAt) return "Data o ora della prenotazione non valida.";
+
+  const now = new Date();
+  now.setSeconds(0, 0);
+  const maxDate = new Date(now);
+  maxDate.setDate(maxDate.getDate() + bookingMaxDaysAhead);
+
+  if (reservationAt < now) {
+    return "La prenotazione deve essere in un orario uguale o successivo a quello attuale.";
+  }
+
+  if (reservationAt > maxDate) {
+    return `La prenotazione non puo superare i ${bookingMaxDaysAhead} giorni di anticipo.`;
+  }
+
+  const start = reservationAt.getHours() * 60 + reservationAt.getMinutes();
+  const isOpen = bookingOpeningWindows.some((window) => bookingFitsOpeningWindow(start, bookingDurationMinutes, window));
+  if (!isOpen) {
+    return "Prenotazioni disponibili solo nella fascia 18:00-01:00; durata standard 2 ore.";
+  }
+
+  return "";
+}
+
+function setupBookingInputs() {
+  const date = qs("#date");
+  const time = qs("#time");
+  if (!date || !time) return;
+  const today = new Date();
+  const maxDate = new Date(today);
+  maxDate.setDate(maxDate.getDate() + bookingMaxDaysAhead);
+  date.min = localDateValue(today);
+  date.max = localDateValue(maxDate);
+  time.step = "900";
+  if (!date.value) date.value = localDateValue(today);
+}
+
 function renderBookingStats(tables) {
   const mount = qs("#bookingStats");
   if (!mount) return;
@@ -446,7 +532,11 @@ function renderBookingStats(tables) {
 function renderBookingMap() {
   const floor = qs("#mapFloor");
   if (!floor) return;
-  const tables = getTableStates();
+  const tables = getTableStates({
+    date: qs("#date")?.value || "",
+    time: qs("#time")?.value || "",
+    durationMinutes: bookingDurationMinutes,
+  });
   bookingTableStates = tables;
   const persons = requestedPersons();
   const selected = tables.find((table) => table.code === selectedTable);
@@ -521,6 +611,7 @@ function bindBooking() {
   const form = qs("#reservationForm");
   const tooltip = qs("#tableTooltip");
   if (!floor || !form) return;
+  setupBookingInputs();
 
   floor.addEventListener("click", (event) => {
     const node = event.target.closest(".table-node");
@@ -563,6 +654,8 @@ function bindBooking() {
   floor.addEventListener("mouseleave", () => tooltip?.classList.remove("is-visible"));
 
   qs("#persons")?.addEventListener("input", renderBookingMap);
+  qs("#date")?.addEventListener("change", renderBookingMap);
+  qs("#time")?.addEventListener("input", renderBookingMap);
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -571,12 +664,27 @@ function bindBooking() {
       return;
     }
     const data = Object.fromEntries(new FormData(form));
-    const reservation = createReservation({ ...data, tableCode: selectedTable });
-    form.reset();
-    selectedTable = "";
-    renderBookingMap();
-    setActiveRoute("");
-    playConfirmation(reservation);
+    const scheduleError = validateBookingSchedule(data);
+    if (scheduleError) {
+      toast(scheduleError);
+      return;
+    }
+
+    const submit = form.querySelector("[type='submit']");
+    if (submit) submit.disabled = true;
+    try {
+      const reservation = createReservation({ ...data, tableCode: selectedTable });
+      form.reset();
+      setupBookingInputs();
+      selectedTable = "";
+      renderBookingMap();
+      setActiveRoute("");
+      playConfirmation(reservation);
+    } catch (error) {
+      toast(error.message || "Prenotazione non riuscita. Controlla data, ora e disponibilita.");
+    } finally {
+      if (submit) submit.disabled = false;
+    }
   });
 }
 

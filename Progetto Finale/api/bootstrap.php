@@ -8,6 +8,9 @@ const DB_USER = 'root';
 const DB_PASSWORD = '';
 const TABLE_SESSION_COOKIE = 'ficsit_table_session';
 const TABLE_SESSION_DURATION_SECONDS = 4 * 60 * 60;
+const RESTAURANT_TIMEZONE = 'Europe/Rome';
+const RESERVATION_DURATION_MINUTES = 120;
+const RESERVATION_MAX_DAYS_AHEAD = 90;
 
 function json_response(mixed $payload, int $status = 200): void
 {
@@ -19,7 +22,8 @@ function json_response(mixed $payload, int $status = 200): void
 
 function fail(Throwable $error): void
 {
-    json_response(['error' => $error->getMessage()], 500);
+    error_log($error->getMessage());
+    json_response(['error' => 'Errore interno del server'], 500);
 }
 
 function server_pdo(): PDO
@@ -118,6 +122,7 @@ function initialize_schema(PDO $pdo): void
     ensure_column($pdo, 'reservations', 'session_token_hash', 'ALTER TABLE reservations ADD COLUMN session_token_hash CHAR(64) NULL AFTER status');
     ensure_column($pdo, 'reservations', 'session_expires_at', 'ALTER TABLE reservations ADD COLUMN session_expires_at DATETIME NULL AFTER session_token_hash');
     ensure_index($pdo, 'reservations', 'reservations_session_token_unique', 'ALTER TABLE reservations ADD UNIQUE KEY reservations_session_token_unique (session_token_hash)');
+    ensure_index($pdo, 'reservations', 'reservations_table_slot_idx', 'ALTER TABLE reservations ADD INDEX reservations_table_slot_idx (table_code, date, time, status)');
     ensure_column($pdo, 'orders', 'table_code', 'ALTER TABLE orders ADD COLUMN table_code VARCHAR(40) NULL AFTER reservation_id');
     $pdo->exec('ALTER TABLE orders MODIFY customer_name VARCHAR(160) NULL');
     ensure_index($pdo, 'orders', 'orders_table_fk', 'ALTER TABLE orders ADD CONSTRAINT orders_table_fk FOREIGN KEY (table_code) REFERENCES tables(code)');
@@ -374,6 +379,34 @@ function replace_reservations(PDO $pdo, array $reservations): void
     }
 }
 
+function update_reservation_status(PDO $pdo, array $payload): array
+{
+    $id = trim((string) ($payload['id'] ?? ''));
+    $status = (string) ($payload['status'] ?? '');
+    if ($id === '' || !in_array($status, ['In attesa', 'Approvata', 'Rifiutata'], true)) {
+        json_response(['error' => 'Stato prenotazione non valido'], 422);
+    }
+
+    $select = $pdo->prepare('
+        SELECT r.*, u.nome, u.cognome, u.email, u.telefono
+        FROM reservations r
+        LEFT JOIN users u ON u.id = r.user_id
+        WHERE r.id = ?
+        LIMIT 1
+    ');
+    $select->execute([$id]);
+    $current = $select->fetch();
+    if (!$current) {
+        json_response(['error' => 'Prenotazione non trovata'], 404);
+    }
+
+    $statement = $pdo->prepare('UPDATE reservations SET status = ?, updated_at = NOW() WHERE id = ?');
+    $statement->execute([$status, $id]);
+
+    $select->execute([$id]);
+    return map_reservation($select->fetch());
+}
+
 function replace_orders(PDO $pdo, array $orders): void
 {
     $pdo->exec('DELETE FROM orders');
@@ -407,6 +440,40 @@ function replace_reviews(PDO $pdo, array $reviews): void
     }
 }
 
+function create_review(PDO $pdo, array $payload): array
+{
+    $review = [
+        'id' => 'REV-' . strtoupper(base_convert((string) time(), 10, 36)) . '-' . strtoupper(bin2hex(random_bytes(3))),
+        'customerName' => trim((string) ($payload['customerName'] ?? '')),
+        'stars' => (int) ($payload['stars'] ?? 0),
+        'comment' => trim((string) ($payload['comment'] ?? '')),
+        'createdAt' => date(DATE_ATOM),
+    ];
+
+    if ($review['customerName'] === '' || strlen($review['customerName']) > 160) {
+        json_response(['error' => 'Nome recensione non valido'], 422);
+    }
+
+    if ($review['stars'] < 1 || $review['stars'] > 5) {
+        json_response(['error' => 'Valutazione non valida'], 422);
+    }
+
+    if ($review['comment'] === '' || strlen($review['comment']) > 1200) {
+        json_response(['error' => 'Commento non valido'], 422);
+    }
+
+    $statement = $pdo->prepare('INSERT INTO reviews (id, customer_name, stars, comment, created_at) VALUES (?, ?, ?, ?, ?)');
+    $statement->execute([
+        $review['id'],
+        $review['customerName'],
+        $review['stars'],
+        $review['comment'],
+        date('Y-m-d H:i:s'),
+    ]);
+
+    return $review;
+}
+
 function request_payload(): array
 {
     $raw = file_get_contents('php://input') ?: '{}';
@@ -414,11 +481,94 @@ function request_payload(): array
     return is_array($payload) ? $payload : [];
 }
 
+function restaurant_timezone(): DateTimeZone
+{
+    return new DateTimeZone(RESTAURANT_TIMEZONE);
+}
+
+function restaurant_opening_windows(int $dayOfWeek): array
+{
+    return [
+        ['18:00', '01:00'],
+    ];
+}
+
+function parse_reservation_datetime(string $date, string $time): DateTimeImmutable
+{
+    $timezone = restaurant_timezone();
+    $value = DateTimeImmutable::createFromFormat('!Y-m-d H:i', $date . ' ' . $time, $timezone);
+    $errors = DateTimeImmutable::getLastErrors();
+    if (!$value || ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0))) {
+        json_response(['error' => 'Data o ora della prenotazione non valida'], 422);
+    }
+    if ($value->format('Y-m-d') !== $date || $value->format('H:i') !== $time) {
+        json_response(['error' => 'Data o ora della prenotazione non valida'], 422);
+    }
+    return $value;
+}
+
+function validate_reservation_schedule(string $date, string $time): DateTimeImmutable
+{
+    $reservationAt = parse_reservation_datetime($date, $time);
+    $timezone = restaurant_timezone();
+    $now = new DateTimeImmutable('now', $timezone);
+    $nowMinute = $now->setTime((int) $now->format('H'), (int) $now->format('i'));
+    $maxDate = $nowMinute->modify('+' . RESERVATION_MAX_DAYS_AHEAD . ' days');
+
+    if ($reservationAt < $nowMinute) {
+        json_response(['error' => 'La prenotazione deve essere in un orario uguale o successivo a quello attuale'], 422);
+    }
+
+    if ($reservationAt > $maxDate) {
+        json_response(['error' => 'La prenotazione non puo superare i ' . RESERVATION_MAX_DAYS_AHEAD . ' giorni di anticipo'], 422);
+    }
+
+    $durationEnd = $reservationAt->modify('+' . RESERVATION_DURATION_MINUTES . ' minutes');
+    $dayOfWeek = (int) $reservationAt->format('N');
+    foreach (restaurant_opening_windows($dayOfWeek) as [$open, $close]) {
+        [$openHour, $openMinute] = array_map('intval', explode(':', $open));
+        [$closeHour, $closeMinute] = array_map('intval', explode(':', $close));
+        $windowStart = $reservationAt->setTime($openHour, $openMinute);
+        $windowEnd = $reservationAt->setTime($closeHour, $closeMinute);
+        if ($windowEnd <= $windowStart) {
+            $windowEnd = $windowEnd->modify('+1 day');
+        }
+        if ($reservationAt >= $windowStart && $durationEnd <= $windowEnd) {
+            return $reservationAt;
+        }
+    }
+
+    json_response(['error' => 'Prenotazioni disponibili solo nella fascia 18:00-01:00; durata standard 2 ore'], 422);
+}
+
+function reservation_conflict_exists(PDO $pdo, string $tableCode, DateTimeImmutable $reservationAt): bool
+{
+    $statement = $pdo->prepare("
+        SELECT time
+        FROM reservations
+        WHERE table_code = ?
+          AND date = ?
+          AND status IN ('In attesa', 'Approvata')
+        FOR UPDATE
+    ");
+    $statement->execute([$tableCode, $reservationAt->format('Y-m-d')]);
+    $requestedStart = $reservationAt->getTimestamp();
+    $requestedEnd = $reservationAt->modify('+' . RESERVATION_DURATION_MINUTES . ' minutes')->getTimestamp();
+    foreach ($statement->fetchAll() as $row) {
+        $existingStart = parse_reservation_datetime($reservationAt->format('Y-m-d'), substr((string) $row['time'], 0, 5))->getTimestamp();
+        $existingEnd = $existingStart + RESERVATION_DURATION_MINUTES * 60;
+        if ($requestedStart < $existingEnd && $requestedEnd > $existingStart) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function reservation_session_expires_at(string $date, string $time): DateTimeImmutable
 {
-    $reservationAt = new DateTimeImmutable($date . ' ' . $time);
+    $reservationAt = parse_reservation_datetime($date, $time);
     $expiresAt = $reservationAt->modify('+' . TABLE_SESSION_DURATION_SECONDS . ' seconds');
-    $minimumExpiry = (new DateTimeImmutable())->modify('+' . TABLE_SESSION_DURATION_SECONDS . ' seconds');
+    $minimumExpiry = (new DateTimeImmutable('now', restaurant_timezone()))->modify('+' . TABLE_SESSION_DURATION_SECONDS . ' seconds');
     return $expiresAt > $minimumExpiry ? $expiresAt : $minimumExpiry;
 }
 
@@ -496,23 +646,50 @@ function create_reservation(PDO $pdo, array $payload): array
         json_response(['error' => 'Dati prenotazione incompleti'], 422);
     }
 
+    if (strlen($reservation['firstName']) > 80 || strlen($reservation['lastName']) > 80) {
+        json_response(['error' => 'Nome e cognome non possono superare 80 caratteri'], 422);
+    }
+
+    if (!filter_var($reservation['email'], FILTER_VALIDATE_EMAIL) || strlen($reservation['email']) > 160) {
+        json_response(['error' => 'Email non valida'], 422);
+    }
+
+    if (!preg_match('/^[0-9 +().-]{6,40}$/', $reservation['phone'])) {
+        json_response(['error' => 'Telefono non valido'], 422);
+    }
+
     if ($reservation['persons'] < 1 || !$reservation['date'] || !$reservation['time'] || !$reservation['tableCode']) {
         json_response(['error' => 'Tavolo, data, ora e numero persone sono obbligatori'], 422);
     }
 
-    $table = $pdo->prepare('SELECT code, capacity FROM tables WHERE code = ?');
-    $table->execute([$reservation['tableCode']]);
-    $tableRow = $table->fetch();
-    if (!$tableRow || (int) $tableRow['capacity'] < $reservation['persons']) {
-        json_response(['error' => 'Tavolo non valido per questa prenotazione'], 422);
+    if ($reservation['persons'] > 12) {
+        json_response(['error' => 'Numero persone non valido'], 422);
     }
 
+    if (!preg_match('/^TABLE-HUB-\d{2}$/', $reservation['tableCode'])) {
+        json_response(['error' => 'Codice tavolo non valido'], 422);
+    }
+
+    $reservationAt = validate_reservation_schedule($reservation['date'], $reservation['time']);
     $expiresAt = reservation_session_expires_at($reservation['date'], $reservation['time']);
     $token = bin2hex(random_bytes(32));
     $reservation['sessionExpiresAt'] = $expiresAt->format(DATE_ATOM);
 
     $pdo->beginTransaction();
     try {
+        $table = $pdo->prepare('SELECT code, capacity, status FROM tables WHERE code = ? FOR UPDATE');
+        $table->execute([$reservation['tableCode']]);
+        $tableRow = $table->fetch();
+        if (!$tableRow || (int) $tableRow['capacity'] < $reservation['persons'] || $tableRow['status'] === 'occupato') {
+            $pdo->rollBack();
+            json_response(['error' => 'Tavolo non valido per questa prenotazione'], 422);
+        }
+
+        if (reservation_conflict_exists($pdo, $reservation['tableCode'], $reservationAt)) {
+            $pdo->rollBack();
+            json_response(['error' => 'Il tavolo selezionato e gia prenotato in questa fascia oraria'], 409);
+        }
+
         $statement = $pdo->prepare('
             INSERT INTO reservations (id, user_id, table_code, persons, date, time, status, session_token_hash, session_expires_at, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -552,6 +729,10 @@ function create_order_for_session(PDO $pdo, array $payload): array
         json_response(['error' => 'Seleziona almeno un piatto'], 422);
     }
 
+    if (count($items) > 20) {
+        json_response(['error' => 'Ordine troppo grande'], 422);
+    }
+
     $ids = array_values(array_unique(array_filter(array_map(static fn ($item) => (string) ($item['id'] ?? ''), $items))));
     if (!$ids) {
         json_response(['error' => 'Ordine non valido'], 422);
@@ -569,7 +750,7 @@ function create_order_for_session(PDO $pdo, array $payload): array
     foreach ($items as $item) {
         $id = (string) ($item['id'] ?? '');
         $quantity = (int) ($item['quantity'] ?? 0);
-        if ($quantity <= 0 || !isset($menuById[$id])) {
+        if ($quantity <= 0 || $quantity > 10 || !isset($menuById[$id])) {
             continue;
         }
         $normalizedItems[] = [
@@ -582,6 +763,11 @@ function create_order_for_session(PDO $pdo, array $payload): array
 
     if (!$normalizedItems) {
         json_response(['error' => 'Nessun piatto disponibile nell ordine'], 422);
+    }
+
+    $totalQuantity = array_reduce($normalizedItems, static fn ($sum, $item) => $sum + (int) $item['quantity'], 0);
+    if ($totalQuantity > 30) {
+        json_response(['error' => 'Quantita totale ordine troppo alta'], 422);
     }
 
     $total = array_reduce($normalizedItems, static fn ($sum, $item) => $sum + $item['price'] * $item['quantity'], 0.0);
