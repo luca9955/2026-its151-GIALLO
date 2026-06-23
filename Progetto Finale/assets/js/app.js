@@ -341,6 +341,10 @@ function bindOrder() {
       toast("Prenota un tavolo prima di ordinare.");
       return;
     }
+    if (!activeTableSession.canOrder) {
+      toast("Attendi l'approvazione della prenotazione prima di ordinare.");
+      return;
+    }
     const button = event.target.closest("button");
     const row = event.target.closest("[data-id]");
     if (!button || !row) return;
@@ -361,6 +365,10 @@ function bindOrder() {
     refreshOrderSession();
     if (!activeTableSession?.active) {
       toast("Prenotazione tavolo mancante o scaduta. Prenota un tavolo prima di ordinare.");
+      return;
+    }
+    if (!activeTableSession.canOrder) {
+      toast("La prenotazione deve essere approvata dall'admin prima di ordinare.");
       return;
     }
     const items = [...orderDraft.values()];
@@ -413,6 +421,17 @@ function renderOrderSession() {
     `;
     submit.disabled = true;
     if (clearButton) clearButton.disabled = true;
+    return;
+  }
+
+  if (!activeTableSession.canOrder) {
+    panel.innerHTML = `
+      <span class="selected-card__kicker">Prenotazione in attesa</span>
+      <strong>${esc(activeTableSession.tableCode)}</strong>
+      <p>Prenotazione ${esc(activeTableSession.reservationId)} non ancora approvata dall'admin.</p>
+    `;
+    submit.disabled = true;
+    if (clearButton) clearButton.disabled = false;
     return;
   }
 

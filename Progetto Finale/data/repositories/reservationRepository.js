@@ -61,7 +61,7 @@ export function getTableSession() {
     }
   }
 
-  return { active: true, tableCode: "LOCAL" };
+  return { active: true, tableCode: "LOCAL", canOrder: true };
 }
 
 export function clearTableSession() {

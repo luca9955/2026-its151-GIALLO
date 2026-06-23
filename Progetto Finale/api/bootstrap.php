@@ -621,6 +621,7 @@ function active_reservation_session(PDO $pdo): ?array
         'reservationId' => $reservation['id'],
         'tableCode' => $reservation['table_code'],
         'status' => $reservation['status'],
+        'canOrder' => $reservation['status'] === 'Approvata',
         'expiresAt' => date(DATE_ATOM, strtotime((string) $reservation['session_expires_at'])),
     ];
 }
@@ -722,6 +723,10 @@ function create_order_for_session(PDO $pdo, array $payload): array
     $session = active_reservation_session($pdo);
     if (!$session) {
         json_response(['error' => 'Prenotazione tavolo mancante o scaduta. Prenota un tavolo prima di ordinare.'], 403);
+    }
+
+    if (($session['status'] ?? '') !== 'Approvata') {
+        json_response(['error' => 'La prenotazione deve essere approvata dall admin prima di ordinare.'], 403);
     }
 
     $items = $payload['items'] ?? [];
