@@ -16,8 +16,7 @@ try {
     }
 
     if ($method === 'DELETE' || $method === 'POST') {
-        clear_table_session_cookie();
-        json_response(['ok' => true]);
+        json_response(close_table_session($pdo));
     }
 
     json_response(['error' => 'Metodo non supportato'], 405);

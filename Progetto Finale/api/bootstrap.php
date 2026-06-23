@@ -93,7 +93,7 @@ function initialize_schema(PDO $pdo): void
           persons INT NOT NULL,
           date DATE NOT NULL,
           time TIME NOT NULL,
-          status ENUM('In attesa', 'Approvata', 'Rifiutata') NOT NULL DEFAULT 'In attesa',
+          status ENUM('In attesa', 'Approvata', 'Rifiutata', 'Terminata') NOT NULL DEFAULT 'In attesa',
           session_token_hash CHAR(64) NULL,
           session_expires_at DATETIME NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -121,6 +121,7 @@ function initialize_schema(PDO $pdo): void
 
     ensure_column($pdo, 'reservations', 'session_token_hash', 'ALTER TABLE reservations ADD COLUMN session_token_hash CHAR(64) NULL AFTER status');
     ensure_column($pdo, 'reservations', 'session_expires_at', 'ALTER TABLE reservations ADD COLUMN session_expires_at DATETIME NULL AFTER session_token_hash');
+    $pdo->exec("ALTER TABLE reservations MODIFY status ENUM('In attesa', 'Approvata', 'Rifiutata', 'Terminata') NOT NULL DEFAULT 'In attesa'");
     ensure_index($pdo, 'reservations', 'reservations_session_token_unique', 'ALTER TABLE reservations ADD UNIQUE KEY reservations_session_token_unique (session_token_hash)');
     ensure_index($pdo, 'reservations', 'reservations_table_slot_idx', 'ALTER TABLE reservations ADD INDEX reservations_table_slot_idx (table_code, date, time, status)');
     ensure_column($pdo, 'orders', 'table_code', 'ALTER TABLE orders ADD COLUMN table_code VARCHAR(40) NULL AFTER reservation_id');
@@ -383,7 +384,7 @@ function update_reservation_status(PDO $pdo, array $payload): array
 {
     $id = trim((string) ($payload['id'] ?? ''));
     $status = (string) ($payload['status'] ?? '');
-    if ($id === '' || !in_array($status, ['In attesa', 'Approvata', 'Rifiutata'], true)) {
+    if ($id === '' || !in_array($status, ['In attesa', 'Approvata', 'Rifiutata', 'Terminata'], true)) {
         json_response(['error' => 'Stato prenotazione non valido'], 422);
     }
 
@@ -400,8 +401,19 @@ function update_reservation_status(PDO $pdo, array $payload): array
         json_response(['error' => 'Prenotazione non trovata'], 404);
     }
 
-    $statement = $pdo->prepare('UPDATE reservations SET status = ?, updated_at = NOW() WHERE id = ?');
-    $statement->execute([$status, $id]);
+    if ($status === 'Terminata') {
+        $pdo->beginTransaction();
+        try {
+            finish_reservation($pdo, $id, (string) $current['table_code']);
+            $pdo->commit();
+        } catch (Throwable $error) {
+            $pdo->rollBack();
+            throw $error;
+        }
+    } else {
+        $statement = $pdo->prepare('UPDATE reservations SET status = ?, updated_at = NOW() WHERE id = ?');
+        $statement->execute([$status, $id]);
+    }
 
     $select->execute([$id]);
     return map_reservation($select->fetch());
@@ -623,6 +635,57 @@ function active_reservation_session(PDO $pdo): ?array
         'status' => $reservation['status'],
         'canOrder' => $reservation['status'] === 'Approvata',
         'expiresAt' => date(DATE_ATOM, strtotime((string) $reservation['session_expires_at'])),
+    ];
+}
+
+function finish_reservation(PDO $pdo, string $reservationId, string $tableCode): void
+{
+    $reservation = $pdo->prepare("
+        UPDATE reservations
+        SET status = 'Terminata',
+            session_token_hash = NULL,
+            session_expires_at = NOW(),
+            updated_at = NOW()
+        WHERE id = ?
+    ");
+    $reservation->execute([$reservationId]);
+
+    $orders = $pdo->prepare("
+        UPDATE orders
+        SET status = 'Consegnato'
+        WHERE reservation_id = ?
+          AND status <> 'Consegnato'
+    ");
+    $orders->execute([$reservationId]);
+
+    $table = $pdo->prepare("UPDATE tables SET status = 'libero' WHERE code = ?");
+    $table->execute([$tableCode]);
+}
+
+function close_table_session(PDO $pdo): array
+{
+    $session = active_reservation_session($pdo);
+    if (!$session) {
+        clear_table_session_cookie();
+        return ['ok' => true, 'closed' => false];
+    }
+
+    $pdo->beginTransaction();
+    try {
+        finish_reservation($pdo, $session['reservationId'], $session['tableCode']);
+        $pdo->commit();
+    } catch (Throwable $error) {
+        $pdo->rollBack();
+        throw $error;
+    }
+
+    clear_table_session_cookie();
+    return [
+        'ok' => true,
+        'closed' => true,
+        'reservationId' => $session['reservationId'],
+        'tableCode' => $session['tableCode'],
+        'status' => 'Terminata',
     ];
 }
 

@@ -13,7 +13,7 @@ let filterText = "";
 let editingMenuId = null;
 
 const euro = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
-const reservationStates = ["In attesa", "Approvata", "Rifiutata"];
+const reservationStates = ["In attesa", "Approvata", "Rifiutata", "Terminata"];
 const orderStates = ["Ricevuto", "Accettato", "In preparazione", "Pronto", "Consegnato"];
 const defaultDishImage = "assets/images/menu-line.svg";
 

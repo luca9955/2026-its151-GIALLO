@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS reservations (
   persons INT NOT NULL,
   date DATE NOT NULL,
   time TIME NOT NULL,
-  status ENUM('In attesa', 'Approvata', 'Rifiutata') NOT NULL DEFAULT 'In attesa',
+  status ENUM('In attesa', 'Approvata', 'Rifiutata', 'Terminata') NOT NULL DEFAULT 'In attesa',
   session_token_hash CHAR(64) NULL,
   session_expires_at DATETIME NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
