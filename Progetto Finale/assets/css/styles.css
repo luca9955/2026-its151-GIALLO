@@ -43,6 +43,29 @@ body {
   overflow-x: hidden;
 }
 
+body[data-page="home"],
+body[data-page="menu"],
+body[data-page="order"],
+body[data-page="booking"],
+body[data-page="reviews"],
+body[data-page="contacts"] {
+  background:
+    linear-gradient(rgba(8, 8, 8, .74), rgba(8, 8, 8, .9)),
+    url("../images/backgrounds/bonobo-throne.png") center top / cover fixed,
+    #080808;
+}
+
+body[data-page="home"] .hero,
+body[data-page="menu"] .hero,
+body[data-page="order"] .hero,
+body[data-page="booking"] .hero,
+body[data-page="reviews"] .hero,
+body[data-page="contacts"] .hero {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .52), rgba(0, 0, 0, .12)),
+    url("../images/backgrounds/bonobo-throne.png") center / cover !important;
+}
+
 body::before,
 body::after {
   content: "";
@@ -201,7 +224,7 @@ select {
   display: grid;
   align-items: end;
   padding: clamp(3rem, 7vw, 7rem) clamp(1rem, 5vw, 5rem);
-  background: linear-gradient(90deg, rgba(0, 0, 0, .82), rgba(0, 0, 0, .3)), var(--hero-image);
+  background: linear-gradient(90deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .18)), var(--hero-image);
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -225,9 +248,9 @@ select {
   min-height: min(820px, calc(100vh - 72px));
   align-items: center;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, .9) 0 36%, rgba(0, 0, 0, .52) 58%, rgba(0, 0, 0, .26)),
-    radial-gradient(circle at 72% 35%, rgba(255, 106, 0, .24), transparent 25rem),
-    var(--hero-image);
+    linear-gradient(90deg, rgba(0, 0, 0, .72) 0 34%, rgba(0, 0, 0, .36) 58%, rgba(0, 0, 0, .08)),
+    radial-gradient(circle at 72% 35%, rgba(255, 106, 0, .14), transparent 25rem),
+    url("../images/backgrounds/bonobo-throne.png");
   background-size: cover;
   background-position: center;
 }
@@ -705,7 +728,7 @@ body.is-easter-active .brand__mark {
   background:
     linear-gradient(90deg, rgba(0, 0, 0, .88), rgba(0, 0, 0, .38)),
     radial-gradient(circle at 72% 38%, rgba(255, 106, 0, .24), transparent 24rem),
-    var(--hero-image);
+    url("../images/backgrounds/bonobo-throne.png");
   background-size: cover;
   background-position: center;
 }
